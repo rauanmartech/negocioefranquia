@@ -54,7 +54,8 @@ async function RelatedPosts({ categoryIds, excludeId }: { categoryIds: number[];
 }
 
 // ─── Article body ─────────────────────────────────────────────────────────────
-async function ArticleContent({ slug }: { slug: string }) {
+async function ArticleContent({ paramsPromise }: { paramsPromise: Promise<{ slug: string }> }) {
+  const { slug } = await paramsPromise;
   const post = await getPostBySlug(slug);
   if (!post) notFound();
 
@@ -201,11 +202,9 @@ async function ArticleContent({ slug }: { slug: string }) {
 }
 
 // ─── Page ─────────────────────────────────────────────────────────────────────
-export default async function NoticiaPage(
+export default function NoticiaPage(
   props: { params: Promise<{ slug: string }> }
 ) {
-  const { slug } = await props.params;
-
   return (
     <div style={{ background: '#fff', minHeight: '100vh' }}>
       <div
@@ -234,7 +233,7 @@ export default async function NoticiaPage(
               </div>
             }
           >
-            <ArticleContent slug={slug} />
+            <ArticleContent paramsPromise={props.params} />
           </Suspense>
         </div>
 
