@@ -1,0 +1,693 @@
+{
+  "categories": [
+    {
+      "id": 10,
+      "name": "Franquias",
+      "slug": "franquias",
+      "count": 15
+    },
+    {
+      "id": 12,
+      "name": "Gestão",
+      "slug": "gestao",
+      "count": 7
+    },
+    {
+      "id": 15,
+      "name": "Mercado",
+      "slug": "mercado",
+      "count": 7
+    },
+    {
+      "id": 14,
+      "name": "Negócios",
+      "slug": "negocios",
+      "count": 9
+    },
+    {
+      "id": 13,
+      "name": "Shoppings",
+      "slug": "shoppings",
+      "count": 6
+    },
+    {
+      "id": 1,
+      "name": "Tecnologia e Inovação",
+      "slug": "tecnologia-e-inovacao",
+      "count": 0
+    },
+    {
+      "id": 11,
+      "name": "Varejo",
+      "slug": "varejo",
+      "count": 8
+    }
+  ],
+  "tags": [
+    {
+      "id": 40,
+      "name": "#bancomaster #bancocentral #danielvorcaro #marcosvalerio #mensalao #dinheiro",
+      "slug": "bancomaster-bancocentral-danielvorcaro-marcosvalerio-mensalao-dinheiro",
+      "count": 1
+    },
+    {
+      "id": 30,
+      "name": "#comunicacao",
+      "slug": "comunicacao",
+      "count": 1
+    },
+    {
+      "id": 50,
+      "name": "#copadomundo",
+      "slug": "copadomundo",
+      "count": 1
+    },
+    {
+      "id": 25,
+      "name": "#deus",
+      "slug": "deus",
+      "count": 1
+    },
+    {
+      "id": 51,
+      "name": "#eleicao",
+      "slug": "eleicao",
+      "count": 1
+    },
+    {
+      "id": 52,
+      "name": "#eleicao2026",
+      "slug": "eleicao2026",
+      "count": 1
+    },
+    {
+      "id": 18,
+      "name": "#fe",
+      "slug": "fe",
+      "count": 1
+    },
+    {
+      "id": 49,
+      "name": "#feriado",
+      "slug": "feriado",
+      "count": 1
+    },
+    {
+      "id": 20,
+      "name": "#franchising",
+      "slug": "franchising",
+      "count": 3
+    },
+    {
+      "id": 19,
+      "name": "#franquias",
+      "slug": "franquias",
+      "count": 4
+    },
+    {
+      "id": 31,
+      "name": "#informacao",
+      "slug": "informacao",
+      "count": 1
+    },
+    {
+      "id": 29,
+      "name": "#jornalismo",
+      "slug": "jornalismo",
+      "count": 1
+    },
+    {
+      "id": 21,
+      "name": "#lojas",
+      "slug": "lojas",
+      "count": 1
+    },
+    {
+      "id": 54,
+      "name": "#mercado",
+      "slug": "mercado",
+      "count": 1
+    },
+    {
+      "id": 26,
+      "name": "#negocioefranquia",
+      "slug": "negocioefranquia",
+      "count": 1
+    },
+    {
+      "id": 16,
+      "name": "#negocioefranquia #franchising #franquias #varejo #mercado #abf",
+      "slug": "negocioefranquia-franchising-franquias-varejo-mercado-abf",
+      "count": 1
+    },
+    {
+      "id": 27,
+      "name": "#noticia",
+      "slug": "noticia",
+      "count": 1
+    },
+    {
+      "id": 53,
+      "name": "#planejamento",
+      "slug": "planejamento",
+      "count": 1
+    },
+    {
+      "id": 17,
+      "name": "#religiao",
+      "slug": "religiao",
+      "count": 1
+    },
+    {
+      "id": 24,
+      "name": "#religioso",
+      "slug": "religioso",
+      "count": 1
+    },
+    {
+      "id": 22,
+      "name": "#roupas",
+      "slug": "roupas",
+      "count": 1
+    },
+    {
+      "id": 23,
+      "name": "#santosantoSanto",
+      "slug": "santosantosanto",
+      "count": 1
+    },
+    {
+      "id": 28,
+      "name": "#site",
+      "slug": "site",
+      "count": 1
+    },
+    {
+      "id": 88,
+      "name": "ABF",
+      "slug": "abf",
+      "count": 1
+    },
+    {
+      "id": 87,
+      "name": "ABF 2026.",
+      "slug": "abf-2026",
+      "count": 1
+    },
+    {
+      "id": 90,
+      "name": "ABF Franchising Expo",
+      "slug": "abf-franchising-expo",
+      "count": 1
+    },
+    {
+      "id": 78,
+      "name": "ABF Franchising Expo 2026",
+      "slug": "abf-franchising-expo-2026",
+      "count": 1
+    },
+    {
+      "id": 60,
+      "name": "academias",
+      "slug": "academias",
+      "count": 0
+    },
+    {
+      "id": 33,
+      "name": "agência de conteúdo",
+      "slug": "agencia-de-conteudo",
+      "count": 1
+    },
+    {
+      "id": 80,
+      "name": "Assessoria de Imprensa",
+      "slug": "assessoria-de-imprensa",
+      "count": 1
+    },
+    {
+      "id": 89,
+      "name": "Associação Brasileira de Franchising",
+      "slug": "associacao-brasileira-de-franchising",
+      "count": 1
+    },
+    {
+      "id": 42,
+      "name": "bargunca",
+      "slug": "bargunca",
+      "count": 1
+    },
+    {
+      "id": 77,
+      "name": "Cinco Olhares Sobre a ABF",
+      "slug": "cinco-olhares-sobre-a-abf",
+      "count": 1
+    },
+    {
+      "id": 38,
+      "name": "CLT",
+      "slug": "clt",
+      "count": 1
+    },
+    {
+      "id": 79,
+      "name": "Cobertura ABF 2026",
+      "slug": "cobertura-abf-2026",
+      "count": 1
+    },
+    {
+      "id": 68,
+      "name": "Consumo",
+      "slug": "consumo",
+      "count": 1
+    },
+    {
+      "id": 36,
+      "name": "conteúdo de mercado",
+      "slug": "conteudo-de-mercado",
+      "count": 1
+    },
+    {
+      "id": 63,
+      "name": "Copa do Mundo",
+      "slug": "copa-do-mundo",
+      "count": 1
+    },
+    {
+      "id": 59,
+      "name": "diabetes",
+      "slug": "diabetes",
+      "count": 0
+    },
+    {
+      "id": 62,
+      "name": "economia",
+      "slug": "economia",
+      "count": 1
+    },
+    {
+      "id": 86,
+      "name": "Economia Regional",
+      "slug": "economia-regional",
+      "count": 1
+    },
+    {
+      "id": 112,
+      "name": "empreendedor",
+      "slug": "empreendedor",
+      "count": 1
+    },
+    {
+      "id": 64,
+      "name": "Empreendedorismo",
+      "slug": "empreendedorismo",
+      "count": 3
+    },
+    {
+      "id": 108,
+      "name": "energia por assinatura",
+      "slug": "energia-por-assinatura",
+      "count": 1
+    },
+    {
+      "id": 81,
+      "name": "Expansão de Franquias",
+      "slug": "expansao-de-franquias",
+      "count": 2
+    },
+    {
+      "id": 111,
+      "name": "expansão empresarial",
+      "slug": "expansao-empresarial",
+      "count": 1
+    },
+    {
+      "id": 72,
+      "name": "feira de franquias",
+      "slug": "feira-de-franquias",
+      "count": 2
+    },
+    {
+      "id": 73,
+      "name": "franchising brasileiro",
+      "slug": "franchising-brasileiro",
+      "count": 3
+    },
+    {
+      "id": 103,
+      "name": "franchising nacional",
+      "slug": "franchising-nacional",
+      "count": 1
+    },
+    {
+      "id": 41,
+      "name": "franquia",
+      "slug": "franquia",
+      "count": 1
+    },
+    {
+      "id": 91,
+      "name": "franquias 2026",
+      "slug": "franquias-2026",
+      "count": 1
+    },
+    {
+      "id": 106,
+      "name": "franquias de beleza",
+      "slug": "franquias-de-beleza",
+      "count": 1
+    },
+    {
+      "id": 107,
+      "name": "franquias de limpeza",
+      "slug": "franquias-de-limpeza",
+      "count": 1
+    },
+    {
+      "id": 105,
+      "name": "franquias de saúde",
+      "slug": "franquias-de-saude",
+      "count": 1
+    },
+    {
+      "id": 95,
+      "name": "franquias de serviços",
+      "slug": "franquias-de-servicos",
+      "count": 1
+    },
+    {
+      "id": 94,
+      "name": "franquias digitais",
+      "slug": "franquias-digitais",
+      "count": 1
+    },
+    {
+      "id": 93,
+      "name": "franquias home based",
+      "slug": "franquias-home-based",
+      "count": 1
+    },
+    {
+      "id": 67,
+      "name": "Gestão de Pessoas",
+      "slug": "gestao-de-pessoas",
+      "count": 1
+    },
+    {
+      "id": 65,
+      "name": "Gestão Empresarial",
+      "slug": "gestao-empresarial",
+      "count": 2
+    },
+    {
+      "id": 110,
+      "name": "inovação",
+      "slug": "inovacao",
+      "count": 1
+    },
+    {
+      "id": 75,
+      "name": "inovação em franquias",
+      "slug": "inovacao-em-franquias",
+      "count": 1
+    },
+    {
+      "id": 47,
+      "name": "inpi",
+      "slug": "inpi",
+      "count": 1
+    },
+    {
+      "id": 96,
+      "name": "inteligência artificial",
+      "slug": "inteligencia-artificial",
+      "count": 1
+    },
+    {
+      "id": 85,
+      "name": "Investimento em Franquias",
+      "slug": "investimento-em-franquias",
+      "count": 2
+    },
+    {
+      "id": 39,
+      "name": "jornalismo digital.",
+      "slug": "jornalismo-digital",
+      "count": 1
+    },
+    {
+      "id": 69,
+      "name": "Marketing Promocional",
+      "slug": "marketing-promocional",
+      "count": 1
+    },
+    {
+      "id": 102,
+      "name": "mercado brasileiro",
+      "slug": "mercado-brasileiro",
+      "count": 1
+    },
+    {
+      "id": 76,
+      "name": "mercado de franquias",
+      "slug": "mercado-de-franquias",
+      "count": 3
+    },
+    {
+      "id": 92,
+      "name": "microfranquias",
+      "slug": "microfranquias",
+      "count": 1
+    },
+    {
+      "id": 101,
+      "name": "modelos de franquia",
+      "slug": "modelos-de-franquia",
+      "count": 1
+    },
+    {
+      "id": 84,
+      "name": "Negócio e Franquia",
+      "slug": "negocio-e-franquia",
+      "count": 2
+    },
+    {
+      "id": 45,
+      "name": "negocios",
+      "slug": "negocios",
+      "count": 3
+    },
+    {
+      "id": 57,
+      "name": "Novo Nordisk",
+      "slug": "novo-nordisk",
+      "count": 0
+    },
+    {
+      "id": 58,
+      "name": "obesidade",
+      "slug": "obesidade",
+      "count": 0
+    },
+    {
+      "id": 104,
+      "name": "oportunidades de negócios",
+      "slug": "oportunidades-de-negocios",
+      "count": 1
+    },
+    {
+      "id": 66,
+      "name": "Produtividade",
+      "slug": "produtividade",
+      "count": 1
+    },
+    {
+      "id": 37,
+      "name": "profissional especializado",
+      "slug": "profissional-especializado",
+      "count": 1
+    },
+    {
+      "id": 98,
+      "name": "redes de franquias",
+      "slug": "redes-de-franquias",
+      "count": 1
+    },
+    {
+      "id": 35,
+      "name": "redução de custos",
+      "slug": "reducao-de-custos",
+      "count": 1
+    },
+    {
+      "id": 48,
+      "name": "registrodemarca",
+      "slug": "registrodemarca",
+      "count": 1
+    },
+    {
+      "id": 61,
+      "name": "saúde e negócios",
+      "slug": "saude-e-negocios",
+      "count": 0
+    },
+    {
+      "id": 109,
+      "name": "seguros",
+      "slug": "seguros",
+      "count": 1
+    },
+    {
+      "id": 55,
+      "name": "semaglutida",
+      "slug": "semaglutida",
+      "count": 0
+    },
+    {
+      "id": 99,
+      "name": "setor de franquias",
+      "slug": "setor-de-franquias",
+      "count": 1
+    },
+    {
+      "id": 71,
+      "name": "Shopping Centers",
+      "slug": "shopping-centers",
+      "count": 1
+    },
+    {
+      "id": 97,
+      "name": "tecnologia no franchising",
+      "slug": "tecnologia-no-franchising",
+      "count": 1
+    },
+    {
+      "id": 74,
+      "name": "tendências ABF 2026",
+      "slug": "tendencias-abf-2026",
+      "count": 1
+    },
+    {
+      "id": 82,
+      "name": "Tendências do Franchising",
+      "slug": "tendencias-do-franchising",
+      "count": 2
+    },
+    {
+      "id": 32,
+      "name": "terceirização jornalismo",
+      "slug": "terceirizacao-jornalismo",
+      "count": 1
+    },
+    {
+      "id": 100,
+      "name": "transformação dos negócios",
+      "slug": "transformacao-dos-negocios",
+      "count": 1
+    },
+    {
+      "id": 44,
+      "name": "uaifai",
+      "slug": "uaifai",
+      "count": 1
+    },
+    {
+      "id": 46,
+      "name": "varejo",
+      "slug": "varejo",
+      "count": 3
+    },
+    {
+      "id": 83,
+      "name": "Varejo Brasileiro",
+      "slug": "varejo-brasileiro",
+      "count": 2
+    },
+    {
+      "id": 34,
+      "name": "veículo de comunicação",
+      "slug": "veiculo-de-comunicacao",
+      "count": 1
+    },
+    {
+      "id": 70,
+      "name": "Vendas",
+      "slug": "vendas",
+      "count": 1
+    },
+    {
+      "id": 56,
+      "name": "Wegovy",
+      "slug": "wegovy",
+      "count": 0
+    },
+    {
+      "id": 43,
+      "name": "xanduixao",
+      "slug": "xanduixao",
+      "count": 1
+    }
+  ],
+  "users": [
+    {
+      "id": 2,
+      "name": "Rodrigo Campelo",
+      "slug": "rodrigocampelo"
+    },
+    {
+      "id": 1,
+      "name": "Ronan Alves",
+      "slug": "webmaster77prime-com-br"
+    }
+  ],
+  "types": [
+    "post",
+    "page",
+    "attachment",
+    "nav_menu_item",
+    "wp_block",
+    "wp_template",
+    "wp_template_part",
+    "wp_global_styles",
+    "wp_navigation",
+    "wp_font_family",
+    "wp_font_face",
+    "e-floating-buttons",
+    "elementor_library",
+    "elementor_snippet",
+    "elementskit_content",
+    "elementskit_template"
+  ],
+  "postSampleMeta": [
+    "id",
+    "date",
+    "date_gmt",
+    "guid",
+    "modified",
+    "modified_gmt",
+    "slug",
+    "status",
+    "type",
+    "link",
+    "title",
+    "content",
+    "excerpt",
+    "author",
+    "featured_media",
+    "comment_status",
+    "ping_status",
+    "sticky",
+    "template",
+    "format",
+    "meta",
+    "categories",
+    "tags",
+    "class_list",
+    "yoast_head",
+    "yoast_head_json",
+    "_links",
+    "_embedded"
+  ],
+  "customFields": {
+    "footnotes": ""
+  }
+}
