@@ -209,7 +209,7 @@ export default async function NoticiaPage(
   return (
     <div style={{ background: '#fff', minHeight: '100vh' }}>
       <div
-        className="container"
+        className="container article-layout"
         style={{
           display: 'grid',
           gridTemplateColumns: 'minmax(0,1fr) 320px',
@@ -218,7 +218,6 @@ export default async function NoticiaPage(
           paddingBottom: '4rem',
           alignItems: 'start',
         }}
-        className="article-layout"
       >
         {/* Article */}
         <div style={{ minWidth: 0 }}>
