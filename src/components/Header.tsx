@@ -132,6 +132,29 @@ export default function Header() {
             Anuncie
           </Link>
 
+          {/* Search Button */}
+          <button
+            aria-label="Pesquisar"
+            style={{
+              background: 'none',
+              border: 'none',
+              cursor: 'pointer',
+              color: 'var(--gray-800)',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              padding: '0.4rem',
+              borderRadius: '50%',
+              transition: 'color 200ms, background 200ms'
+            }}
+            className="search-btn"
+          >
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+              <circle cx="11" cy="11" r="8"/>
+              <path d="m21 21-4.3-4.3"/>
+            </svg>
+          </button>
+
           {/* Hamburger (mobile) */}
           <button
             aria-label="Abrir menu"
@@ -225,6 +248,10 @@ export default function Header() {
         }
         .cta-btn:hover {
           background: var(--brand-secondary) !important;
+        }
+        .search-btn:hover {
+          color: var(--brand-primary) !important;
+          background: var(--gray-50) !important;
         }
       `}</style>
     </header>
