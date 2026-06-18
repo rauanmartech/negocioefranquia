@@ -24,9 +24,60 @@ function SectionSkeleton() {
   );
 }
 
-// ─── Section 1 & 2: Hero & Destaques Secundários ──────────────────────────────
-async function HeroAndDestaques() {
-  // Pegamos as 5 matérias mais recentes
+import Image from 'next/image';
+import heroBg from '@/assets/hero-section.webp';
+
+// ─── Section 1: Hero Institucional ────────────────────────────────────────────
+function HeroInstitucional() {
+  return (
+    <section style={{ position: 'relative', width: '100%', overflow: 'hidden' }}>
+      <div style={{ position: 'relative', width: '100%', display: 'flex' }}>
+        <Image 
+          src={heroBg} 
+          alt="Negócios e Franquias Banner" 
+          style={{ width: '100%', height: 'auto', display: 'block' }} 
+          priority
+        />
+        {/* Overlay suave para legibilidade apenas na esquerda */}
+        <div style={{
+          position: 'absolute',
+          inset: 0,
+          background: 'linear-gradient(90deg, rgba(0,0,0,0.6) 0%, rgba(0,0,0,0.2) 40%, transparent 60%)',
+          zIndex: 1
+        }} />
+        <div 
+          className="container"
+          style={{
+            position: 'absolute',
+            inset: 0,
+            display: 'flex',
+            flexDirection: 'column',
+            justifyContent: 'center',
+            alignItems: 'flex-start',
+            zIndex: 2,
+            margin: '0 auto',
+            width: '100%'
+          }}
+        >
+          <div style={{ maxWidth: '60%' }}>
+            <h1 style={{ fontSize: 'clamp(1.5rem, 4vw, 3.5rem)', fontWeight: 900, color: '#fff', letterSpacing: '-0.03em', margin: '0 0 0.5rem', textShadow: '0 2px 10px rgba(0,0,0,0.5)' }}>
+              Negócios e Franquias
+            </h1>
+            <p style={{ fontSize: 'clamp(0.875rem, 2vw, 1.25rem)', color: 'rgba(255,255,255,0.95)', margin: '0 0 1.5rem', maxWidth: '500px', fontWeight: 500, textShadow: '0 1px 5px rgba(0,0,0,0.5)' }}>
+              Conteúdo, mídia e relacionamento para os mercados de franquias, varejo e shopping centers.
+            </p>
+            <div style={{ display: 'inline-block', background: 'var(--brand-primary)', color: '#fff', padding: '0.6rem 1.2rem', borderRadius: '50px', fontSize: 'clamp(0.7rem, 1.5vw, 0.85rem)', fontWeight: 700, letterSpacing: '0.02em', textTransform: 'uppercase', boxShadow: '0 4px 15px rgba(0,0,0,0.2)' }}>
+              Mais de 300 mil leitores acompanhando diariamente
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+  );
+}
+
+// ─── Section 2: Destaques Secundários ─────────────────────────────────────────
+async function DestaquesNoticias() {
   const posts = await getRecentPosts(5);
   if (!posts.length) return null;
 
@@ -34,26 +85,10 @@ async function HeroAndDestaques() {
 
   return (
     <section style={{ marginBottom: '4rem', display: 'flex', flexDirection: 'column', gap: '2rem' }}>
-      {/* Título Institucional */}
-      <div style={{ textAlign: 'center', margin: '2rem 0' }}>
-        <h1 style={{ fontSize: 'clamp(2rem, 5vw, 3.5rem)', fontWeight: 900, color: 'var(--gray-900)', letterSpacing: '-0.03em', margin: '0 0 0.5rem' }}>
-          Negócios e Franquias
-        </h1>
-        <p style={{ fontSize: 'clamp(1rem, 2vw, 1.25rem)', color: 'var(--gray-600)', margin: '0 auto 1rem', maxWidth: '800px', fontWeight: 500 }}>
-          Conteúdo, mídia e relacionamento para os mercados de franquias, varejo e shopping centers.
-        </p>
-        <div style={{ display: 'inline-block', background: 'var(--brand-primary)', color: '#fff', padding: '0.5rem 1rem', borderRadius: '50px', fontSize: '0.85rem', fontWeight: 700, letterSpacing: '0.02em', textTransform: 'uppercase' }}>
-          Mais de 300 mil leitores acompanhando diariamente as transformações do varejo brasileiro.
-        </div>
-      </div>
-
       <div style={{ display: 'grid', gridTemplateColumns: 'minmax(0,1fr)', gap: '2rem' }}>
-        {/* Hero Principal */}
         <div>
           <HeroArticle article={hero} />
         </div>
-        
-        {/* Destaques Secundários (4 matérias) */}
         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(240px, 1fr))', gap: '1.5rem' }}>
           {secundarias.map((a) => (
             <SecondaryArticleCard key={a.id} article={a} />
@@ -316,10 +351,13 @@ async function MaisLidas() {
 export default function NewHomePage() {
   return (
     <div style={{ background: '#fff', minHeight: '100vh' }}>
+      
+      <HeroInstitucional />
+
       <div className="container" style={{ paddingTop: '2rem', paddingBottom: '4rem' }}>
         
         <Suspense fallback={<SectionSkeleton />}>
-          <HeroAndDestaques />
+          <DestaquesNoticias />
         </Suspense>
 
         <BannerPremium />
