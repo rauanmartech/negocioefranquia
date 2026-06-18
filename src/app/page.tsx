@@ -5,59 +5,57 @@ import { HeroArticle, SecondaryArticleCard, StandardArticleCard, GridArticleCard
 import type { Metadata } from 'next';
 
 export const metadata: Metadata = {
-  title: 'Negócio e Franquia | Inteligência de Mercado',
-  description:
-    'O principal ecossistema de conteúdo, mídia e relacionamento dos mercados de franquias, varejo e shopping centers.',
+  title: 'Negócios e Franquias | Plataforma de Negócios',
+  description: 'Conteúdo, mídia e relacionamento para os mercados de franquias, varejo e shopping centers.',
 };
 
-// ─── Sections de editorias ────────────────────────────────────────────────────
-const EDITORIAL_SECTIONS = [
-  { slug: 'franquias', label: 'Franquias' },
-  { slug: 'varejo', label: 'Varejo' },
-  { slug: 'shoppings', label: 'Shopping Centers' },
-];
-
-// ─── Skeleton ─────────────────────────────────────────────────────────────────
-function HeroSkeleton() {
+// ─── Skeletons ────────────────────────────────────────────────────────────────
+function SectionSkeleton() {
   return (
-    <div className="skeleton" style={{ borderRadius: 6, aspectRatio: '16/9', minHeight: 340 }} />
-  );
-}
-
-function CardSkeleton() {
-  return (
-    <div style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem' }}>
-      <div className="skeleton" style={{ aspectRatio: '16/9', borderRadius: 6 }} />
-      <div className="skeleton" style={{ height: 14, width: '80%' }} />
-      <div className="skeleton" style={{ height: 14, width: '60%' }} />
+    <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(220px, 1fr))', gap: '1.75rem' }}>
+      {Array.from({ length: 4 }).map((_, i) => (
+        <div key={i} style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem' }}>
+          <div className="skeleton" style={{ aspectRatio: '16/9', borderRadius: 6 }} />
+          <div className="skeleton" style={{ height: 14, width: '80%' }} />
+          <div className="skeleton" style={{ height: 14, width: '60%' }} />
+        </div>
+      ))}
     </div>
   );
 }
 
-// ─── Hero + Secondary grid ────────────────────────────────────────────────────
-async function HeroSection() {
+// ─── Section 1 & 2: Hero & Destaques Secundários ──────────────────────────────
+async function HeroAndDestaques() {
+  // Pegamos as 5 matérias mais recentes
   const posts = await getRecentPosts(5);
   if (!posts.length) return null;
 
-  const [hero, ...secondary] = posts;
+  const [hero, ...secundarias] = posts;
 
   return (
-    <section style={{ marginBottom: '3.5rem' }}>
-      <div
-        style={{
-          display: 'grid',
-          gridTemplateColumns: 'minmax(0,1fr) minmax(0,0.55fr)',
-          gap: '1rem',
-          alignItems: 'stretch',
-        }}
-        className="hero-grid"
-      >
-        {/* Hero */}
-        <HeroArticle article={hero} />
+    <section style={{ marginBottom: '4rem', display: 'flex', flexDirection: 'column', gap: '2rem' }}>
+      {/* Título Institucional */}
+      <div style={{ textAlign: 'center', margin: '2rem 0' }}>
+        <h1 style={{ fontSize: 'clamp(2rem, 5vw, 3.5rem)', fontWeight: 900, color: 'var(--gray-900)', letterSpacing: '-0.03em', margin: '0 0 0.5rem' }}>
+          Negócios e Franquias
+        </h1>
+        <p style={{ fontSize: 'clamp(1rem, 2vw, 1.25rem)', color: 'var(--gray-600)', margin: '0 auto 1rem', maxWidth: '800px', fontWeight: 500 }}>
+          Conteúdo, mídia e relacionamento para os mercados de franquias, varejo e shopping centers.
+        </p>
+        <div style={{ display: 'inline-block', background: 'var(--brand-primary)', color: '#fff', padding: '0.5rem 1rem', borderRadius: '50px', fontSize: '0.85rem', fontWeight: 700, letterSpacing: '0.02em', textTransform: 'uppercase' }}>
+          Mais de 300 mil leitores acompanhando diariamente as transformações do varejo brasileiro.
+        </div>
+      </div>
 
-        {/* Secondary (2 cards) */}
-        <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
-          {secondary.slice(0, 2).map((a) => (
+      <div style={{ display: 'grid', gridTemplateColumns: 'minmax(0,1fr)', gap: '2rem' }}>
+        {/* Hero Principal */}
+        <div>
+          <HeroArticle article={hero} />
+        </div>
+        
+        {/* Destaques Secundários (4 matérias) */}
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(240px, 1fr))', gap: '1.5rem' }}>
+          {secundarias.map((a) => (
             <SecondaryArticleCard key={a.id} article={a} />
           ))}
         </div>
@@ -66,186 +64,299 @@ async function HeroSection() {
   );
 }
 
-// ─── Últimas notícias + sidebar ───────────────────────────────────────────────
-async function LatestSection() {
-  const posts = await getRecentPosts(14);
-  const latest = posts.slice(5, 13); // slots 6–13
-
+// ─── Section 3: Banner Premium ────────────────────────────────────────────────
+function BannerPremium() {
   return (
-    <section style={{ marginBottom: '3.5rem' }}>
-      <div className="section-label">
-        <h2>Últimas Notícias</h2>
-      </div>
-
-      <div
-        style={{
-          display: 'grid',
-          gridTemplateColumns: 'minmax(0,1fr) minmax(0,1fr)',
-          gap: '0 3rem',
-        }}
-        className="latest-grid"
-      >
-        <div>
-          {latest.slice(0, 4).map((a) => (
-            <StandardArticleCard key={a.id} article={a} />
-          ))}
-        </div>
-        <div>
-          {latest.slice(4, 8).map((a) => (
-            <StandardArticleCard key={a.id} article={a} />
-          ))}
+    <section style={{ marginBottom: '4rem' }}>
+      <div style={{ 
+        width: '100%', 
+        height: '120px', 
+        background: 'linear-gradient(90deg, var(--gray-100), var(--gray-200))', 
+        borderRadius: '8px',
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+        border: '1px solid var(--gray-300)',
+        position: 'relative',
+        overflow: 'hidden'
+      }}>
+        <div style={{ textAlign: 'center' }}>
+          <span style={{ fontSize: '0.7rem', textTransform: 'uppercase', color: 'var(--gray-500)', fontWeight: 700, letterSpacing: '0.1em' }}>Banner Premium</span>
+          <h3 style={{ fontSize: '1.2rem', color: 'var(--gray-400)', margin: '0.5rem 0 0' }}>Espaço Publicitário</h3>
         </div>
       </div>
     </section>
   );
 }
 
-// ─── Seção de editoria ────────────────────────────────────────────────────────
-async function EditorialSection({ slug, label }: { slug: string; label: string }) {
-  const posts = await getPostsByCategory(slug, 4);
+// ─── Section 4: Últimas Notícias (Feed Contínuo) ──────────────────────────────
+async function UltimasNoticias() {
+  // Pegamos a partir da 6ª matéria para não repetir o hero e os 4 destaques
+  const allPosts = await getRecentPosts(13); // 5 hero/destaques + 8 ultimas
+  const latest = allPosts.slice(5);
+
+  if (!latest.length) return null;
+
+  return (
+    <section style={{ marginBottom: '4rem', padding: '2rem', background: '#fff', borderRadius: '12px', border: '1px solid var(--gray-200)', boxShadow: '0 4px 20px rgba(0,0,0,0.03)' }}>
+      <div className="section-label" style={{ borderBottom: '2px solid var(--brand-primary)', paddingBottom: '0.5rem', marginBottom: '1.5rem' }}>
+        <h2 style={{ fontSize: '1.5rem', fontWeight: 800 }}>Últimas Notícias</h2>
+        <Link href="/noticias" style={{ fontSize: '0.85rem', fontWeight: 700, color: 'var(--brand-primary)', textDecoration: 'none' }}>Ver todas →</Link>
+      </div>
+
+      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(300px, 1fr))', gap: '1.5rem' }}>
+        {latest.map((a) => (
+          <StandardArticleCard key={a.id} article={a} />
+        ))}
+      </div>
+    </section>
+  );
+}
+
+// ─── Sections 5, 6, 7: Editorias com Banner Lateral ───────────────────────────
+async function EditoriaComBanner({ slug, title }: { slug: string, title: string }) {
+  const posts = await getPostsByCategory(slug, 6);
   if (!posts.length) return null;
 
   return (
-    <section style={{ marginBottom: '3.5rem' }}>
-      <div className="section-label">
-        <h2>{label}</h2>
-        <Link href={`/${slug}`}>Ver todos →</Link>
+    <section style={{ marginBottom: '4rem' }}>
+      <div className="section-label" style={{ marginBottom: '1.5rem' }}>
+        <h2 style={{ fontSize: '1.75rem', fontWeight: 800, color: 'var(--gray-900)', borderLeft: '4px solid var(--brand-primary)', paddingLeft: '1rem' }}>{title}</h2>
       </div>
 
-      <div
-        style={{
-          display: 'grid',
-          gridTemplateColumns: 'repeat(auto-fill, minmax(220px, 1fr))',
-          gap: '1.75rem',
-        }}
-      >
-        {posts.map((a) => (
-          <GridArticleCard key={a.id} article={a} />
-        ))}
+      <div style={{ display: 'grid', gridTemplateColumns: 'minmax(0, 1fr) 300px', gap: '2rem', alignItems: 'start' }} className="editoria-grid">
+        {/* Matérias */}
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(220px, 1fr))', gap: '1.75rem' }}>
+          {posts.map((a) => (
+            <GridArticleCard key={a.id} article={a} />
+          ))}
+        </div>
+
+        {/* Banner Lateral */}
+        <div style={{ 
+          background: 'var(--gray-100)', 
+          minHeight: '600px', 
+          borderRadius: '8px', 
+          display: 'flex', 
+          alignItems: 'center', 
+          justifyContent: 'center',
+          border: '1px dashed var(--gray-300)'
+        }}>
+          <div style={{ textAlign: 'center', padding: '1rem' }}>
+            <span style={{ fontSize: '0.7rem', textTransform: 'uppercase', color: 'var(--gray-500)', fontWeight: 700, letterSpacing: '0.1em' }}>Banner Lateral</span>
+            <p style={{ color: 'var(--gray-400)', fontSize: '0.9rem', margin: '0.5rem 0 0' }}>300x600 px</p>
+          </div>
+        </div>
       </div>
     </section>
   );
 }
 
-// ─── Anuncie CTA ─────────────────────────────────────────────────────────────
-function AnuncieCTA() {
+// ─── Section 8: N&F Play ──────────────────────────────────────────────────────
+function NFPlay() {
   return (
-    <section
-      style={{
-        margin: '3rem 0',
-        borderRadius: 8,
-        overflow: 'hidden',
-        background: 'linear-gradient(135deg, var(--brand-primary) 0%, var(--background-dark) 100%)',
-        padding: 'clamp(2rem, 5vw, 3.5rem) clamp(1.5rem, 5vw, 4rem)',
-        display: 'flex',
-        flexWrap: 'wrap',
-        alignItems: 'center',
-        justifyContent: 'space-between',
-        gap: '2rem',
-      }}
-    >
-      <div>
-        <p style={{ color: 'rgba(255,255,255,0.65)', fontSize: '0.8rem', fontWeight: 600, textTransform: 'uppercase', letterSpacing: '0.08em', margin: '0 0 0.5rem' }}>
-          Publicidade
-        </p>
-        <h2
-          style={{
-            color: '#fff',
-            fontSize: 'clamp(1.25rem, 3vw, 1.875rem)',
-            fontWeight: 800,
-            margin: '0 0 0.5rem',
-            letterSpacing: '-0.02em',
-            lineHeight: 1.2,
-          }}
-        >
-          Leve a Autoridade do Negócio & Franquia<br /> para o seu Veículo
-        </h2>
-        <p style={{ color: 'rgba(255,255,255,0.7)', fontSize: '0.9rem', margin: 0, maxWidth: '50ch' }}>
-          Faça do nosso ecossistema a ponte entre sua marca e o mercado de franquias e varejo.
-        </p>
+    <section style={{ marginBottom: '4rem', background: '#0a0a0a', color: '#fff', padding: '4rem 2rem', borderRadius: '16px' }}>
+      <div className="section-label" style={{ marginBottom: '2rem' }}>
+        <h2 style={{ fontSize: '2rem', fontWeight: 900, color: '#fff' }}>N&F Play</h2>
+        <span style={{ fontSize: '0.9rem', color: 'var(--brand-primary)', fontWeight: 700, textTransform: 'uppercase' }}>Vídeos e Podcasts</span>
       </div>
-      <Link
-        href="/anuncie"
-        style={{
-          background: '#fff',
-          color: 'var(--brand-primary)',
-          padding: '0.875rem 2rem',
-          borderRadius: 4,
-          fontWeight: 800,
-          fontSize: '0.85rem',
-          textDecoration: 'none',
-          textTransform: 'uppercase',
-          letterSpacing: '0.05em',
-          whiteSpace: 'nowrap',
-          flexShrink: 0,
-        }}
-      >
-        Peço uma Proposta
-      </Link>
-    </section>
-  );
-}
-
-// ─── Page ─────────────────────────────────────────────────────────────────────
-export default function HomePage() {
-  return (
-    <div style={{ background: 'var(--background-alt)', minHeight: '100vh' }}>
-      <div className="container" style={{ paddingTop: '2rem', paddingBottom: '4rem' }}>
-        {/* Hero */}
-        <Suspense fallback={<HeroSkeleton />}>
-          <HeroSection />
-        </Suspense>
-
-        {/* Últimas notícias */}
-        <Suspense
-          fallback={
-            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '3rem' }}>
-              {Array.from({ length: 4 }).map((_, i) => (
-                <div key={i} style={{ display: 'flex', gap: '1rem', padding: '1.25rem 0', borderBottom: '1px solid var(--gray-100)' }}>
-                  <div className="skeleton" style={{ width: 100, height: 72, borderRadius: 4, flexShrink: 0 }} />
-                  <div style={{ flex: 1, display: 'flex', flexDirection: 'column', gap: '0.5rem', justifyContent: 'center' }}>
-                    <div className="skeleton" style={{ height: 12, width: '90%' }} />
-                    <div className="skeleton" style={{ height: 12, width: '70%' }} />
-                  </div>
-                </div>
-              ))}
+      
+      <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: '1.5rem' }} className="play-grid">
+        {/* Placeholder para Vídeos Principais */}
+        {[1, 2, 3].map((i) => (
+          <div key={i} style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
+            <div style={{ aspectRatio: '16/9', background: '#222', borderRadius: '8px', position: 'relative', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+              <div style={{ width: '48px', height: '48px', borderRadius: '50%', background: 'rgba(255,255,255,0.1)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                <div style={{ width: 0, height: 0, borderTop: '10px solid transparent', borderBottom: '10px solid transparent', borderLeft: '16px solid #fff', marginLeft: '6px' }} />
+              </div>
             </div>
-          }
-        >
-          <LatestSection />
+            <h3 style={{ fontSize: '1rem', fontWeight: 700, color: '#fff', margin: 0 }}>Em breve: Conteúdo multimídia exclusivo</h3>
+            <p style={{ fontSize: '0.8rem', color: '#888', margin: 0 }}>Série Especial • 15 min</p>
+          </div>
+        ))}
+      </div>
+    </section>
+  );
+}
+
+// ─── Section 9: Na Lata ───────────────────────────────────────────────────────
+function NaLata() {
+  return (
+    <section style={{ marginBottom: '4rem', padding: '3rem', background: 'var(--brand-primary)', color: '#fff', borderRadius: '12px' }}>
+      <div style={{ textAlign: 'center', marginBottom: '2rem' }}>
+        <h2 style={{ fontSize: '2.5rem', fontWeight: 900, margin: '0 0 0.5rem', letterSpacing: '-0.03em' }}>NA LATA</h2>
+        <p style={{ fontSize: '1.1rem', fontWeight: 500, margin: 0, opacity: 0.9 }}>Informação direta, sem rodeios e com opinião forte.</p>
+      </div>
+
+      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(250px, 1fr))', gap: '2rem' }}>
+        {[1, 2, 3, 4].map((i) => (
+          <div key={i} style={{ background: '#fff', color: 'var(--gray-900)', padding: '1.5rem', borderRadius: '8px', boxShadow: '0 10px 30px rgba(0,0,0,0.1)' }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '1rem', marginBottom: '1rem' }}>
+              <div style={{ width: '40px', height: '40px', borderRadius: '50%', background: 'var(--gray-200)' }} />
+              <div>
+                <h4 style={{ fontSize: '0.9rem', fontWeight: 800, margin: 0 }}>Opinião Especialista</h4>
+                <span style={{ fontSize: '0.75rem', color: 'var(--gray-500)' }}>Colunista Convidado</span>
+              </div>
+            </div>
+            <h3 style={{ fontSize: '1.1rem', fontWeight: 700, margin: '0 0 0.5rem', lineHeight: 1.3 }}>Aguarde novidades exclusivas nesta seção</h3>
+            <p style={{ fontSize: '0.85rem', color: 'var(--gray-600)', margin: 0 }}>Análises profundas sobre o mercado em breve.</p>
+          </div>
+        ))}
+      </div>
+    </section>
+  );
+}
+
+// ─── Section 10: Especiais ────────────────────────────────────────────────────
+function Especiais() {
+  return (
+    <section style={{ marginBottom: '4rem' }}>
+      <div className="section-label" style={{ marginBottom: '1.5rem' }}>
+        <h2 style={{ fontSize: '1.75rem', fontWeight: 800 }}>Projetos Especiais</h2>
+      </div>
+
+      <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '2rem' }} className="especiais-grid">
+        {[1, 2].map((i) => (
+          <div key={i} style={{ position: 'relative', borderRadius: '12px', overflow: 'hidden', minHeight: '300px', background: 'var(--gray-800)', display: 'flex', alignItems: 'flex-end', padding: '2rem' }}>
+            <div style={{ position: 'absolute', inset: 0, background: 'linear-gradient(to top, rgba(0,0,0,0.8), transparent)' }} />
+            <div style={{ position: 'relative', zIndex: 1 }}>
+              <span style={{ background: '#fff', color: 'var(--gray-900)', fontSize: '0.75rem', fontWeight: 800, padding: '0.3rem 0.8rem', borderRadius: '4px', textTransform: 'uppercase', marginBottom: '1rem', display: 'inline-block' }}>Patrocinado</span>
+              <h3 style={{ color: '#fff', fontSize: '1.5rem', fontWeight: 800, margin: '0 0 0.5rem', maxWidth: '80%' }}>Conteúdo Especial Premium (Em breve)</h3>
+              <p style={{ color: 'rgba(255,255,255,0.8)', fontSize: '0.9rem', margin: 0 }}>Uma área dedicada a projetos de alto valor e profundidade.</p>
+            </div>
+          </div>
+        ))}
+      </div>
+    </section>
+  );
+}
+
+// ─── Section 11 & 12: Artigos e Colunas / Agenda de Eventos ───────────────────
+function ArtigosEAgenda() {
+  return (
+    <section style={{ marginBottom: '4rem', display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '3rem' }} className="artigos-agenda-grid">
+      {/* Artigos e Colunas */}
+      <div>
+        <div className="section-label" style={{ marginBottom: '1.5rem', borderBottom: '2px solid var(--gray-200)', paddingBottom: '0.5rem' }}>
+          <h2 style={{ fontSize: '1.5rem', fontWeight: 800 }}>Artigos e Colunas</h2>
+        </div>
+        <div style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem' }}>
+          {[1, 2, 3].map((i) => (
+            <div key={i} style={{ display: 'flex', gap: '1rem', alignItems: 'flex-start' }}>
+              <div style={{ width: '64px', height: '64px', borderRadius: '50%', background: 'var(--gray-200)', flexShrink: 0 }} />
+              <div>
+                <h3 style={{ fontSize: '1.05rem', fontWeight: 700, margin: '0 0 0.25rem', color: 'var(--gray-900)' }}>Título do Artigo Opinião (Em breve)</h3>
+                <p style={{ fontSize: '0.85rem', color: 'var(--gray-500)', margin: '0 0 0.25rem' }}>Por Nome do Autor</p>
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
+
+      {/* Agenda de Eventos */}
+      <div>
+        <div className="section-label" style={{ marginBottom: '1.5rem', borderBottom: '2px solid var(--gray-200)', paddingBottom: '0.5rem' }}>
+          <h2 style={{ fontSize: '1.5rem', fontWeight: 800 }}>Agenda de Eventos</h2>
+        </div>
+        <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
+          {[
+            { dia: '15', mes: 'OUT', titulo: 'ABF Franchising Expo', local: 'São Paulo, SP' },
+            { dia: '22', mes: 'OUT', titulo: 'Latam Retail Show', local: 'São Paulo, SP' },
+            { dia: '05', mes: 'NOV', titulo: 'Fórum de Varejo', local: 'Online' }
+          ].map((evento, i) => (
+            <div key={i} style={{ display: 'flex', gap: '1.25rem', alignItems: 'center', background: 'var(--gray-50)', padding: '1rem', borderRadius: '8px', border: '1px solid var(--gray-200)' }}>
+              <div style={{ textAlign: 'center', minWidth: '50px', background: '#fff', borderRadius: '6px', padding: '0.5rem', border: '1px solid var(--gray-200)' }}>
+                <span style={{ display: 'block', fontSize: '0.75rem', fontWeight: 700, color: 'var(--brand-primary)', textTransform: 'uppercase' }}>{evento.mes}</span>
+                <span style={{ display: 'block', fontSize: '1.25rem', fontWeight: 900, color: 'var(--gray-900)' }}>{evento.dia}</span>
+              </div>
+              <div>
+                <h4 style={{ fontSize: '1rem', fontWeight: 700, color: 'var(--gray-900)', margin: '0 0 0.25rem' }}>{evento.titulo}</h4>
+                <p style={{ fontSize: '0.8rem', color: 'var(--gray-500)', margin: 0 }}>📍 {evento.local}</p>
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
+    </section>
+  );
+}
+
+// ─── Section 13: Mais Lidas (Fallback para recentes) ──────────────────────────
+async function MaisLidas() {
+  // Como não há API de pageviews, usamos os últimos posts com offset para simular
+  const allPosts = await getRecentPosts(20);
+  const lidas = allPosts.slice(10, 16); // 6 posts
+
+  if (!lidas.length) return null;
+
+  return (
+    <section style={{ marginBottom: '4rem', padding: '3rem 0', borderTop: '1px solid var(--gray-200)' }}>
+      <div className="section-label" style={{ textAlign: 'center', marginBottom: '2.5rem' }}>
+        <h2 style={{ fontSize: '2rem', fontWeight: 900 }}>Mais Lidas</h2>
+      </div>
+
+      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(180px, 1fr))', gap: '2rem' }}>
+        {lidas.map((a, index) => (
+          <Link key={a.id} href={`/noticia/${a.slug}`} style={{ textDecoration: 'none', display: 'flex', flexDirection: 'column', gap: '1rem' }} className="card-hover">
+            <div style={{ fontSize: '3rem', fontWeight: 900, color: 'var(--gray-200)', lineHeight: 0.8, letterSpacing: '-0.05em' }}>
+              {(index + 1).toString().padStart(2, '0')}
+            </div>
+            <h3 style={{ fontSize: '0.95rem', fontWeight: 700, color: 'var(--gray-900)', margin: 0, lineHeight: 1.4 }} dangerouslySetInnerHTML={{ __html: a.title }} />
+            <span style={{ fontSize: '0.75rem', color: 'var(--brand-primary)', fontWeight: 700, textTransform: 'uppercase' }}>
+              {a.categories[0]?.name}
+            </span>
+          </Link>
+        ))}
+      </div>
+    </section>
+  );
+}
+
+// ─── Main Page Component ──────────────────────────────────────────────────────
+export default function NewHomePage() {
+  return (
+    <div style={{ background: '#fff', minHeight: '100vh' }}>
+      <div className="container" style={{ paddingTop: '2rem', paddingBottom: '4rem' }}>
+        
+        <Suspense fallback={<SectionSkeleton />}>
+          <HeroAndDestaques />
         </Suspense>
 
-        {/* Editorias */}
-        {EDITORIAL_SECTIONS.map((section) => (
-          <Suspense
-            key={section.slug}
-            fallback={
-              <section style={{ marginBottom: '3.5rem' }}>
-                <div className="section-label"><h2>{section.label}</h2></div>
-                <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(220px, 1fr))', gap: '1.75rem' }}>
-                  {Array.from({ length: 4 }).map((_, i) => <CardSkeleton key={i} />)}
-                </div>
-              </section>
-            }
-          >
-            <EditorialSection slug={section.slug} label={section.label} />
-          </Suspense>
-        ))}
+        <BannerPremium />
 
-        <AnuncieCTA />
+        <Suspense fallback={<SectionSkeleton />}>
+          <UltimasNoticias />
+        </Suspense>
+
+        <Suspense fallback={<SectionSkeleton />}>
+          <EditoriaComBanner slug="franquias" title="Franquias" />
+        </Suspense>
+
+        <Suspense fallback={<SectionSkeleton />}>
+          <EditoriaComBanner slug="varejo" title="Varejo" />
+        </Suspense>
+
+        <Suspense fallback={<SectionSkeleton />}>
+          <EditoriaComBanner slug="shoppings" title="Shopping Centers" />
+        </Suspense>
+
+        <NFPlay />
+        <NaLata />
+        <Especiais />
+        <ArtigosEAgenda />
+
+        <Suspense fallback={<SectionSkeleton />}>
+          <MaisLidas />
+        </Suspense>
+
       </div>
 
       <style>{`
-        @media (max-width: 900px) {
-          .hero-grid {
-            grid-template-columns: 1fr !important;
-          }
+        @media (max-width: 1024px) {
+          .editoria-grid { grid-template-columns: 1fr !important; }
         }
-        @media (max-width: 640px) {
-          .latest-grid {
-            grid-template-columns: 1fr !important;
-            gap: 0 !important;
-          }
+        @media (max-width: 900px) {
+          .play-grid, .especiais-grid, .artigos-agenda-grid { grid-template-columns: 1fr !important; }
         }
       `}</style>
     </div>

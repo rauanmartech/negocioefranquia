@@ -5,11 +5,10 @@ import Link from 'next/link';
 import Image from 'next/image';
 
 const NAV_LINKS = [
-  { label: 'Notícias', href: '/' },
-  { label: 'Franquias', href: '/franquias' },
-  { label: 'Varejo', href: '/varejo' },
-  { label: 'Shopping Centers', href: '/shoppings' },
-  { label: 'Gestão', href: '/gestao' },
+  { label: 'Notícias', href: '/noticias' },
+  { label: 'Especiais', href: '/especiais' },
+  { label: 'N&F Play', href: '/play' },
+  { label: 'Na Lata', href: '/na-lata' },
   { label: 'Quem Somos', href: '/quem-somos' },
 ];
 
