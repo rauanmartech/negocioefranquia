@@ -6,6 +6,7 @@ import {
   type ProjetoEspecial,
   type StatusEspecial,
 } from '@/lib/especiais';
+import especiaisBanner from '@/assets/especiais-banner.png';
 
 export const metadata: Metadata = {
   title: 'Especiais | Publicações de Referência do Mercado',
@@ -465,8 +466,27 @@ export default function EspeciaisPage() {
       <section style={{
         borderBottom: '1px solid var(--gray-200)',
         padding: '5rem 0 4rem',
+        position: 'relative',
+        overflow: 'hidden',
+        backgroundColor: '#fff',
       }}>
-        <div className="container">
+        {/* Imagem de fundo com máscara de fade */}
+        <div style={{
+          position: 'absolute',
+          top: 0,
+          right: 0,
+          bottom: 0,
+          width: '55%',
+          backgroundImage: `url('${especiaisBanner.src}')`,
+          backgroundPosition: 'center',
+          backgroundSize: 'cover',
+          backgroundRepeat: 'no-repeat',
+          zIndex: 0,
+          maskImage: 'linear-gradient(to left, black 40%, transparent 100%)',
+          WebkitMaskImage: 'linear-gradient(to left, black 40%, transparent 100%)',
+        }} />
+
+        <div className="container" style={{ position: 'relative', zIndex: 1 }}>
           <span style={{
             display: 'block',
             fontSize: '0.72rem',
