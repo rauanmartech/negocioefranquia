@@ -1,0 +1,115 @@
+{
+  "pagina": "Quem Somos",
+  "site": "Negócio & Franquia",
+  "url": "negocioefranquia.com.br/quem-somos",
+  "data_captura": "2026-06-21",
+  "header": {
+    "logo": "Negócio & Franquia",
+    "banner_anuncio": "ANUNCIE NA NEGÓCIO & FRANQUIA",
+    "banner_url": "www.negocioefranquia.com.br",
+    "menu": ["Home", "Notícias", "Soluções", "Quem Somos", "Contato"],
+    "cta_header": "FALE CONOSCO"
+  },
+  "secao_hero": {
+    "breadcrumb_eyebrow": "O NEGÓCIO & FRANQUIA",
+    "titulo": "QUEM SOMOS",
+    "subtitulo": "A NEGÓCIO & FRANQUIA NASCEU EM 2002",
+    "paragrafos": [
+      "Quando o palestrante Rodrigo Campelo — então superintendente de shoppings centers — lidava diariamente com um desafio comum: 'Preciso reduzir o meu aluguel.'",
+      "Ao investigar o problema, descobriu que a raiz da dificuldade não estava no shopping, mas na gestão dos negócios. A partir dessa percepção, surgiu o desejo de ajudar empreendedores com informação, educação e estratégia."
+    ]
+  },
+  "nossa_evolucao": {
+    "titulo": "NOSSA EVOLUÇÃO",
+    "linha_do_tempo": [
+      {
+        "ano": "2002",
+        "descricao": "Nasce um blog pioneiro e especializado no mercado de franquias."
+      },
+      {
+        "ano": "2010",
+        "descricao": "Consolidação como o portal de referência em franquias, gestão e varejo."
+      },
+      {
+        "ano": "2025",
+        "descricao": "Tornamo-nos a principal agência de conteúdo e assessoria do país."
+      }
+    ]
+  },
+  "especialidades": {
+    "titulo": "ESPECIALIDADES",
+    "cards": [
+      {
+        "titulo": "Repasse de Franquias",
+        "cta": "Saiba Mais →"
+      },
+      {
+        "titulo": "Gestão de Crises",
+        "cta": "Saiba Mais →"
+      },
+      {
+        "titulo": "Agência de Conteúdo",
+        "cta": "Saiba Mais →"
+      }
+    ]
+  },
+  "missao_visao_valores": {
+    "eyebrow": "MISSÃO, VISÃO E VALORES",
+    "titulo": "Nossa Essência e Direção",
+    "blocos": [
+      {
+        "icone": "gráfico de barras",
+        "titulo": "Visão",
+        "texto": "Ser a principal agência de conteúdo e assessoria do Brasil, transformando o mercado com nossa plataforma inovadora de repasse."
+      },
+      {
+        "icone": "bandeira",
+        "titulo": "Missão",
+        "texto": "Conectar informação, gestão e oportunidade, ajudando empreendedores a tomar decisões inteligentes com segurança e propósito."
+      },
+      {
+        "icone": "coração",
+        "titulo": "Valores",
+        "texto": "Credibilidade, ética, transparência e segurança. Informação de qualidade e estratégia focada em resultados reais para nossos clientes."
+      }
+    ]
+  },
+  "newsletter": {
+    "titulo": "Inscreva-se em nossa Newsletter e receba conteúdos exclusivos.",
+    "campos": ["Nome", "E-mail"],
+    "cta": "✉ Inscreva-se"
+  },
+  "footer": {
+    "logo": "Negócio & Franquia",
+    "descricao": "A Negócio & Franquia é a maior referência mineira e nacional em conteúdo sobre franquias, varejo e gestão.",
+    "atendimento": {
+      "label": "ATENDIMENTO",
+      "telefone": "(11) 99991-1777"
+    },
+    "menu": {
+      "titulo": "Menu",
+      "links": ["Notícias", "Repasse de Franquias", "Gestão de Crises", "Agência de Conteúdo", "Quem Somos", "Contato"]
+    },
+    "editorias": {
+      "titulo": "Editorias",
+      "links": ["Franquias", "Varejo", "Gestão", "Shoppings", "Negócios", "Mercado"]
+    },
+    "links_uteis": {
+      "titulo": "Links Úteis",
+      "links": ["Trabalhe Conosco", "FAQ's", "Rodrigo Campelo", "NEF Seguros"]
+    },
+    "contato": {
+      "titulo": "Contato",
+      "telefone": "(11) 99991-1777",
+      "email": "contato@negocioefranquia.com.br",
+      "horario": "08:00 as 18:00"
+    },
+    "unidades": {
+      "titulo": "Unidades",
+      "locais": ["Belo Horizonte - Minas Gerais", "São Paulo - São Paulo", "Brasília - Distrito Federal"]
+    },
+    "redes_sociais": ["Instagram", "LinkedIn", "YouTube", "TikTok"],
+    "copyright": "Copyright © 2025 Negócio & Franquia. Todos os direitos reservados. Desenvolvido por 77Prime Labs Ltda",
+    "links_legais": ["Política de Privacidade", "Política de Cookies", "Termos de..."]
+  }
+}

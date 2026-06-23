@@ -13,8 +13,12 @@ export const metadata: Metadata = {
 // ─── Sections de editorias ────────────────────────────────────────────────────
 const EDITORIAL_SECTIONS = [
   { slug: 'franquias', label: 'Franquias' },
-  { slug: 'varejo', label: 'Varejo' },
+  { slug: 'gestao', label: 'Gestão' },
+  { slug: 'mercado', label: 'Mercado' },
+  { slug: 'negocios', label: 'Negócios' },
   { slug: 'shoppings', label: 'Shopping Centers' },
+  { slug: 'varejo', label: 'Varejo' },
+  { slug: 'tecnologia-e-inovacao', label: 'Tecnologia e Inovação' },
 ];
 
 // ─── Skeleton ─────────────────────────────────────────────────────────────────
