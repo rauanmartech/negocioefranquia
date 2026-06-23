@@ -2,19 +2,31 @@ import { Suspense } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
-import { getPostBySlug, getRelatedPosts } from '@/lib/api';
+import { getPostBySlug, getRelatedPosts, getPostsByCategory, CATEGORY_IDS, CATEGORY_LABELS } from '@/lib/api';
 import { GridArticleCard } from '@/components/ArticleCard';
 import { formatDate } from '@/lib/utils';
 import type { Metadata } from 'next';
+
+const VALID_SLUGS = Object.keys(CATEGORY_IDS);
 
 // ─── Metadata ─────────────────────────────────────────────────────────────────
 export async function generateMetadata(
   props: { params: Promise<{ slug: string }> }
 ): Promise<Metadata> {
   const { slug } = await props.params;
+
+  if (VALID_SLUGS.includes(slug)) {
+    const label = CATEGORY_LABELS[slug];
+    if (!label) return { title: 'Negócios e Franquias' };
+    return {
+      title: `${label} | Negócios e Franquias`,
+      description: `Todas as notícias sobre ${label} no portal Negócios e Franquias.`,
+    };
+  }
+
   const post = await getPostBySlug(slug);
 
-  if (!post) return { title: 'Artigo não encontrado' };
+  if (!post) return { title: 'Página não encontrada' };
 
   return {
     title: post.title.replace(/<[^>]+>/g, ''),
@@ -28,7 +40,120 @@ export async function generateMetadata(
   };
 }
 
-// ─── Related Posts ────────────────────────────────────────────────────────────
+// ─── Static params ────────────────────────────────────────────────────────────
+export function generateStaticParams() {
+  return VALID_SLUGS.map((slug) => ({ slug }));
+}
+
+// ==============================================================================
+// CATEGORY COMPONENTS
+// ==============================================================================
+
+function CardSkeleton() {
+  return (
+    <div style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem' }}>
+      <div className="skeleton" style={{ aspectRatio: '16/9', borderRadius: 6 }} />
+      <div className="skeleton" style={{ height: 14, width: '80%' }} />
+      <div className="skeleton" style={{ height: 14, width: '60%' }} />
+    </div>
+  );
+}
+
+async function ArticlesList({ slug }: { slug: string }) {
+  const posts = await getPostsByCategory(slug, 24);
+  if (!posts.length) {
+    return (
+      <div style={{ textAlign: 'center', padding: '4rem 0', color: 'var(--gray-500)' }}>
+        <p style={{ fontSize: '1.1rem' }}>Nenhuma notícia encontrada nesta categoria ainda.</p>
+        <Link href="/" style={{ color: 'var(--brand-primary)', fontWeight: 700, textDecoration: 'none', marginTop: '1rem', display: 'inline-block' }}>
+          Voltar à Home →
+        </Link>
+      </div>
+    );
+  }
+
+  return (
+    <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(280px, 1fr))', gap: '2rem' }}>
+      {posts.map((a) => (
+        <GridArticleCard key={a.id} article={a} />
+      ))}
+    </div>
+  );
+}
+
+function CategoryView({ slug }: { slug: string }) {
+  const label = CATEGORY_LABELS[slug];
+
+  return (
+    <div style={{ background: '#fff', minHeight: '100vh' }}>
+      {/* Page Header */}
+      <div
+        style={{
+          background: 'var(--brand-primary)',
+          padding: '3rem 0',
+          marginBottom: '3rem',
+        }}
+      >
+        <div className="container">
+          {/* Breadcrumb */}
+          <nav style={{ marginBottom: '1rem' }}>
+            <Link
+              href="/"
+              style={{ color: 'rgba(255,255,255,0.7)', fontSize: '0.8rem', textDecoration: 'none', fontWeight: 500 }}
+            >
+              Home
+            </Link>
+            <span style={{ color: 'rgba(255,255,255,0.4)', margin: '0 0.5rem' }}>/</span>
+            <Link
+              href="/noticias"
+              style={{ color: 'rgba(255,255,255,0.7)', fontSize: '0.8rem', textDecoration: 'none', fontWeight: 500 }}
+            >
+              Notícias
+            </Link>
+            <span style={{ color: 'rgba(255,255,255,0.4)', margin: '0 0.5rem' }}>/</span>
+            <span style={{ color: '#fff', fontSize: '0.8rem', fontWeight: 700 }}>{label}</span>
+          </nav>
+
+          <h1
+            style={{
+              color: '#fff',
+              fontSize: 'clamp(2rem, 5vw, 3rem)',
+              fontWeight: 900,
+              margin: 0,
+              letterSpacing: '-0.02em',
+              textTransform: 'uppercase',
+            }}
+          >
+            {label}
+          </h1>
+          <p style={{ color: 'rgba(255,255,255,0.75)', margin: '0.75rem 0 0', fontSize: '1rem' }}>
+            Todas as notícias sobre {label}
+          </p>
+        </div>
+      </div>
+
+      {/* Content */}
+      <div className="container" style={{ paddingBottom: '5rem' }}>
+        <Suspense
+          fallback={
+            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(280px, 1fr))', gap: '2rem' }}>
+              {Array.from({ length: 12 }).map((_, i) => (
+                <CardSkeleton key={i} />
+              ))}
+            </div>
+          }
+        >
+          <ArticlesList slug={slug} />
+        </Suspense>
+      </div>
+    </div>
+  );
+}
+
+// ==============================================================================
+// ARTICLE COMPONENTS
+// ==============================================================================
+
 async function RelatedPosts({ categoryIds, excludeId }: { categoryIds: number[]; excludeId: number }) {
   const related = await getRelatedPosts(categoryIds, excludeId, 3);
   if (!related.length) return null;
@@ -53,9 +178,7 @@ async function RelatedPosts({ categoryIds, excludeId }: { categoryIds: number[];
   );
 }
 
-// ─── Article body ─────────────────────────────────────────────────────────────
-async function ArticleContent({ paramsPromise }: { paramsPromise: Promise<{ slug: string }> }) {
-  const { slug } = await paramsPromise;
+async function ArticleContent({ slug }: { slug: string }) {
   const post = await getPostBySlug(slug);
   if (!post) notFound();
 
@@ -201,10 +324,7 @@ async function ArticleContent({ paramsPromise }: { paramsPromise: Promise<{ slug
   );
 }
 
-// ─── Page ─────────────────────────────────────────────────────────────────────
-export default function NoticiaPage(
-  props: { params: Promise<{ slug: string }> }
-) {
+function ArticleView({ slug }: { slug: string }) {
   return (
     <div style={{ background: '#fff', minHeight: '100vh' }}>
       <div
@@ -233,7 +353,7 @@ export default function NoticiaPage(
               </div>
             }
           >
-            <ArticleContent paramsPromise={props.params} />
+            <ArticleContent slug={slug} />
           </Suspense>
         </div>
 
@@ -341,4 +461,23 @@ export default function NoticiaPage(
       `}</style>
     </div>
   );
+}
+
+// ==============================================================================
+// MAIN DISPATCHER
+// ==============================================================================
+
+export default async function SlugPage(
+  props: { params: Promise<{ slug: string }> }
+) {
+  const { slug } = await props.params;
+
+  // 1. Check if it's a category
+  if (VALID_SLUGS.includes(slug)) {
+    return <CategoryView slug={slug} />;
+  }
+
+  // 2. Otherwise, treat it as an article. 
+  // It will call notFound() inside ArticleContent if not found.
+  return <ArticleView slug={slug} />;
 }
