@@ -2,6 +2,7 @@ import { Suspense } from 'react';
 import Link from 'next/link';
 import { getRecentPosts, getPostsByCategory } from '@/lib/api';
 import { HeroArticle, SecondaryArticleCard, StandardArticleCard, GridArticleCard } from '@/components/ArticleCard';
+import AdBanner from '@/components/AdBanner';
 import type { Metadata } from 'next';
 
 export const metadata: Metadata = {
@@ -195,6 +196,11 @@ export default function HomePage() {
   return (
     <div style={{ background: 'var(--background-alt)', minHeight: '100vh' }}>
       <div className="container" style={{ paddingTop: '2rem', paddingBottom: '4rem' }}>
+        {/* Banner topo */}
+        <section style={{ marginBottom: '2rem' }}>
+          <AdBanner width={970} height={250} />
+        </section>
+
         {/* Hero */}
         <Suspense fallback={<HeroSkeleton />}>
           <HeroSection />

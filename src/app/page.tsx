@@ -2,6 +2,7 @@ import { Suspense } from 'react';
 import Link from 'next/link';
 import { getRecentPosts, getPostsByCategory } from '@/lib/api';
 import { HeroArticle, SecondaryArticleCard, StandardArticleCard, GridArticleCard } from '@/components/ArticleCard';
+import AdBanner from '@/components/AdBanner';
 import type { Metadata } from 'next';
 
 export const metadata: Metadata = {
@@ -51,23 +52,7 @@ async function DestaquesNoticias() {
 function BannerPremium() {
   return (
     <section style={{ marginBottom: '4rem' }}>
-      <div style={{ 
-        width: '100%', 
-        height: '90px', 
-        background: 'linear-gradient(90deg, var(--gray-100), var(--gray-200))', 
-        borderRadius: '8px',
-        display: 'flex',
-        alignItems: 'center',
-        justifyContent: 'center',
-        border: '1px solid var(--gray-300)',
-        position: 'relative',
-        overflow: 'hidden'
-      }}>
-        <div style={{ textAlign: 'center' }}>
-          <span style={{ fontSize: '0.7rem', textTransform: 'uppercase', color: 'var(--gray-500)', fontWeight: 700, letterSpacing: '0.1em' }}>Banner Premium</span>
-          <h3 style={{ fontSize: '1.1rem', color: 'var(--gray-400)', margin: '0.2rem 0 0' }}>Espaço Publicitário</h3>
-        </div>
-      </div>
+      <AdBanner width={970} height={250} />
     </section>
   );
 }
