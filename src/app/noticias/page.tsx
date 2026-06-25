@@ -3,13 +3,15 @@ import Link from 'next/link';
 import { getRecentPosts, getPostsByCategory } from '@/lib/api';
 import { HeroArticle, SecondaryArticleCard, StandardArticleCard, GridArticleCard } from '@/components/ArticleCard';
 import AdBanner from '@/components/AdBanner';
+import { constructMetadata, siteConfig } from '@/lib/seo';
 import type { Metadata } from 'next';
 
-export const metadata: Metadata = {
-  title: 'Negócio e Franquia | Inteligência de Mercado',
-  description:
-    'O principal ecossistema de conteúdo, mídia e relacionamento dos mercados de franquias, varejo e shopping centers.',
-};
+export const metadata: Metadata = constructMetadata(
+  'Notícias | Negócio & Franquia',
+  'Acompanhe as últimas notícias e novidades dos mercados de franquias, varejo e shopping centers.',
+  undefined,
+  `${siteConfig.url}/noticias`
+);
 
 // ─── Sections de editorias ────────────────────────────────────────────────────
 const EDITORIAL_SECTIONS = [

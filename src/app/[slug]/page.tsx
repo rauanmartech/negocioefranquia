@@ -7,6 +7,8 @@ import { GridArticleCard } from '@/components/ArticleCard';
 import { formatDate } from '@/lib/utils';
 import type { Metadata } from 'next';
 
+import { constructMetadata, siteConfig, getNewsArticleSchema } from '@/lib/seo';
+
 const VALID_SLUGS = Object.keys(CATEGORY_IDS);
 
 // ─── Metadata ─────────────────────────────────────────────────────────────────
@@ -17,27 +19,30 @@ export async function generateMetadata(
 
   if (VALID_SLUGS.includes(slug)) {
     const label = CATEGORY_LABELS[slug];
-    if (!label) return { title: 'Negócios e Franquias' };
-    return {
-      title: `${label} | Negócios e Franquias`,
-      description: `Todas as notícias sobre ${label} no portal Negócios e Franquias.`,
-    };
+    if (!label) return constructMetadata('Página não encontrada');
+    return constructMetadata(
+      `${label} | Negócio & Franquia`,
+      `Últimas notícias, tendências e análises sobre ${label.toLowerCase()} no Brasil.`,
+      undefined,
+      `${siteConfig.url}/${slug}`
+    );
   }
 
   const post = await getPostBySlug(slug);
 
-  if (!post) return { title: 'Página não encontrada' };
+  if (!post) return constructMetadata('Página não encontrada', undefined, undefined, undefined, true);
 
-  return {
-    title: post.title.replace(/<[^>]+>/g, ''),
-    description: post.excerpt.replace(/<[^>]+>/g, '').slice(0, 160),
-    openGraph: {
-      title: post.title.replace(/<[^>]+>/g, ''),
-      description: post.excerpt.replace(/<[^>]+>/g, '').slice(0, 160),
-      images: post.imageUrl ? [{ url: post.imageUrl, alt: post.imageAlt }] : [],
-      type: 'article',
-    },
-  };
+  const cleanTitle = post.title.replace(/<[^>]+>/g, '');
+  const description = post.excerpt
+    ? post.excerpt.replace(/<[^>]+>/g, '').trim()
+    : post.content.replace(/<[^>]+>/g, '').trim().slice(0, 150) + '...';
+
+  return constructMetadata(
+    `${cleanTitle} | Negócio & Franquia`,
+    description,
+    post.imageUrl || undefined,
+    `${siteConfig.url}/${slug}`
+  );
 }
 
 // ─── Static params ────────────────────────────────────────────────────────────
@@ -186,6 +191,19 @@ async function ArticleContent({ slug }: { slug: string }) {
 
   return (
     <article>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(getNewsArticleSchema({
+          title: post.title,
+          excerpt: post.excerpt,
+          content: post.content,
+          imageUrl: post.imageUrl,
+          datePublished: post.date,
+          dateModified: post.date,
+          authorName: post.authorName,
+          slug: post.slug
+        })) }}
+      />
       {/* Header da matéria */}
       <header style={{ marginBottom: '2rem' }}>
         {/* Breadcrumb */}

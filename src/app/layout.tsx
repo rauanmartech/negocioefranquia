@@ -4,6 +4,8 @@ import "./globals.css";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 
+import { constructMetadata } from "@/lib/seo";
+
 const inter = Inter({
   variable: "--font-inter",
   subsets: ["latin"],
@@ -11,18 +13,8 @@ const inter = Inter({
 });
 
 export const metadata: Metadata = {
-  title: {
-    default: "Negócio e Franquia | Inteligência de Mercado",
-    template: "%s | Negócio e Franquia",
-  },
-  description:
-    "O principal ecossistema de conteúdo, mídia e relacionamento dos mercados de franquias, varejo e shopping centers.",
+  ...constructMetadata(),
   metadataBase: new URL("https://negocioefranquia.com.br"),
-  openGraph: {
-    siteName: "Negócio e Franquia",
-    locale: "pt_BR",
-    type: "website",
-  },
 };
 
 export default function RootLayout({

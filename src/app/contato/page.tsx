@@ -3,10 +3,14 @@ import Link from 'next/link';
 import type { Metadata } from 'next';
 import contatoImg from '@/assets/contato.png';
 
-export const metadata: Metadata = {
-  title: 'Contato | Negócio e Franquia',
-  description: 'Entre em contato com a equipe da Negócio e Franquia. Nossa equipe está à disposição para conversar sobre franquias, varejo e gestão.',
-};
+import { constructMetadata, siteConfig } from '@/lib/seo';
+
+export const metadata: Metadata = constructMetadata(
+  'Contato | Negócio & Franquia',
+  'Entre em contato com a equipe da Negócio & Franquia. Nossa equipe está à disposição para conversar sobre franquias, varejo e gestão.',
+  undefined,
+  `${siteConfig.url}/contato`
+);
 
 export default function ContatoPage() {
   const unidades = [

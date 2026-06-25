@@ -2,11 +2,14 @@ import Link from 'next/link';
 import type { Metadata } from 'next';
 import anuncieBanner from '@/assets/anuncie-banner.png';
 
-export const metadata: Metadata = {
-  title: 'Anuncie | Negócios & Franquias',
-  description:
-    'Conecte sua marca a uma audiência altamente qualificada dos mercados de franquias, varejo e shopping centers.',
-};
+import { constructMetadata, siteConfig } from '@/lib/seo';
+
+export const metadata: Metadata = constructMetadata(
+  'Anuncie | Negócio & Franquia',
+  'Conecte sua marca a uma audiência altamente qualificada dos mercados de franquias, varejo e shopping centers.',
+  undefined,
+  `${siteConfig.url}/anuncie`
+);
 
 // ─── Dados ────────────────────────────────────────────────────────────────────
 

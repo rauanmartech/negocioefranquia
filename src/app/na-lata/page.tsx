@@ -1,9 +1,12 @@
+import { constructMetadata, siteConfig } from '@/lib/seo';
 import type { Metadata } from 'next';
 
-export const metadata: Metadata = {
-  title: 'Na Lata | A voz dos franqueados',
-  description: 'Experiências reais, erros, acertos e opiniões de quem vive o franchising.',
-};
+export const metadata: Metadata = constructMetadata(
+  'Na Lata | Negócio & Franquia',
+  'A voz dos franqueados: Experiências reais, erros, acertos e a pura autenticidade de quem vive o franchising na pele.',
+  undefined,
+  `${siteConfig.url}/na-lata`
+);
 
 export default function NaLataPage() {
   const quadros = [

@@ -3,12 +3,15 @@ import Link from 'next/link';
 import { getRecentPosts, getPostsByCategory } from '@/lib/api';
 import { HeroArticle, SecondaryArticleCard, StandardArticleCard, GridArticleCard } from '@/components/ArticleCard';
 import AdBanner from '@/components/AdBanner';
+import { constructMetadata } from '@/lib/seo';
 import type { Metadata } from 'next';
 
-export const metadata: Metadata = {
-  title: 'Negócios e Franquias | Plataforma de Negócios',
-  description: 'Conteúdo, mídia e relacionamento para os mercados de franquias, varejo e shopping centers.',
-};
+export const metadata: Metadata = constructMetadata(
+  'Negócio & Franquia | Notícias sobre Franquias, Varejo e Shopping Centers',
+  'Portal editorial especializado em franquias, varejo e shopping centers. Notícias, análises, entrevistas, vídeos, podcasts e conteúdos especiais para empresários, executivos e investidores.',
+  undefined,
+  'https://negocioefranquia.com.br'
+);
 
 // ─── Skeletons ────────────────────────────────────────────────────────────────
 function SectionSkeleton() {
@@ -276,10 +279,16 @@ async function MaisLidas() {
   );
 }
 
+import { getWebSiteSchema } from '@/lib/seo';
+
 // ─── Main Page Component ──────────────────────────────────────────────────────
 export default function NewHomePage() {
   return (
     <div style={{ background: '#fff', minHeight: '100vh' }}>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(getWebSiteSchema()) }}
+      />
       <div className="container" style={{ paddingTop: '2rem', paddingBottom: '4rem' }}>
 
         <BannerPremium />

@@ -3,12 +3,15 @@ import Link from 'next/link';
 import heroBg from '@/assets/hero-section.webp';
 import pqNosEscolherBg from '@/assets/pq-nos-escolher.png';
 import corporateHandshake from '@/assets/corporate_handshake.png';
+import { constructMetadata, siteConfig } from '@/lib/seo';
 import type { Metadata } from 'next';
 
-export const metadata: Metadata = {
-  title: 'Quem Somos | Negócios e Franquias',
-  description: 'Conheça a Negócios e Franquias, o ecossistema de inteligência em franquias, varejo e shopping centers.',
-};
+export const metadata: Metadata = constructMetadata(
+  'Quem Somos | Negócio & Franquia',
+  'Conheça a Negócio & Franquia, o ecossistema de inteligência em franquias, varejo e shopping centers.',
+  undefined,
+  `${siteConfig.url}/quem-somos`
+);
 
 // ─── Componentes Originais (Banners) ──────────────────────────────────────────
 

@@ -1,9 +1,12 @@
+import { constructMetadata, siteConfig } from '@/lib/seo';
 import type { Metadata } from 'next';
 
-export const metadata: Metadata = {
-  title: 'N&F Play | Multimídia',
-  description: 'Hub de conteúdo multimídia da Negócios e Franquias.',
-};
+export const metadata: Metadata = constructMetadata(
+  'N&F Play | Multimídia',
+  'Hub de conteúdo multimídia da Negócio & Franquia. Assista vídeos, podcasts e séries especiais.',
+  undefined,
+  `${siteConfig.url}/play`
+);
 
 export default function NFPlayPage() {
   return (

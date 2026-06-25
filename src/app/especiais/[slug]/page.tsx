@@ -3,6 +3,8 @@ import { notFound } from 'next/navigation';
 import { getProjetoBySlug, PROJETOS_ESPECIAIS } from '@/lib/especiais';
 import type { Metadata } from 'next';
 
+import { constructMetadata, siteConfig } from '@/lib/seo';
+
 // ─── Static params ─────────────────────────────────────────────────────────────
 export async function generateStaticParams() {
   return PROJETOS_ESPECIAIS.map((p) => ({ slug: p.slug }));
@@ -14,12 +16,14 @@ export async function generateMetadata(
 ): Promise<Metadata> {
   const { slug } = await props.params;
   const projeto = getProjetoBySlug(slug);
-  if (!projeto) return {};
+  if (!projeto) return constructMetadata('Página não encontrada', undefined, undefined, undefined, true);
 
-  return {
-    title: projeto.nome,
-    description: projeto.descricao,
-  };
+  return constructMetadata(
+    `${projeto.nome} | Especiais N&F`,
+    projeto.descricao,
+    undefined,
+    `${siteConfig.url}/especiais/${slug}`
+  );
 }
 
 // ─── Breadcrumb ───────────────────────────────────────────────────────────────

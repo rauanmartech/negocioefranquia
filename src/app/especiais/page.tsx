@@ -8,11 +8,14 @@ import {
 } from '@/lib/especiais';
 import especiaisBanner from '@/assets/especiais-banner.png';
 
-export const metadata: Metadata = {
-  title: 'Especiais | Publicações de Referência do Mercado',
-  description:
-    'Análises, rankings e anuários editoriais que documentam e referenciam o ecossistema de franquias, varejo e shopping centers no Brasil.',
-};
+import { constructMetadata, siteConfig } from '@/lib/seo';
+
+export const metadata: Metadata = constructMetadata(
+  'Especiais | Publicações de Referência do Mercado',
+  'Análises, rankings e anuários editoriais que documentam e referenciam o ecossistema de franquias, varejo e shopping centers no Brasil.',
+  undefined,
+  `${siteConfig.url}/especiais`
+);
 
 // ─── Label de status ──────────────────────────────────────────────────────────
 function BadgeStatus({ status, edicao }: { status: StatusEspecial; edicao: string | null }) {
