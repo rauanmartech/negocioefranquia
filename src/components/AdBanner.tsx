@@ -48,10 +48,14 @@ export default function AdBanner({ width = 970, height = 250 }: AdBannerProps) {
 
   useEffect(() => {
     if (initialized.current) return;
-    initialized.current = true;
 
     const iframe = iframeRef.current;
     if (!iframe) return;
+
+    // Marca como inicializado somente após confirmar que o iframe existe.
+    // O cleanup reseta o flag na desmontagem, garantindo que ao retornar
+    // para a Home o anúncio seja recriado corretamente.
+    initialized.current = true;
 
     // Acessa o documento interno do iframe
     const iframeDoc =
@@ -86,6 +90,13 @@ export default function AdBanner({ width = 970, height = 250 }: AdBannerProps) {
     iframeDoc.open();
     iframeDoc.write(adHtml);
     iframeDoc.close();
+
+    // Cleanup: reseta o guard ao desmontar (ex: ao sair da Home).
+    // Garante que ao retornar para a Home o anúncio seja recriado corretamente,
+    // sem duplicatas e sem estado residual entre navegações.
+    return () => {
+      initialized.current = false;
+    };
   }, [width, height]);
 
   return (
