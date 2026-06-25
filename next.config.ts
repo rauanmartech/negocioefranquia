@@ -9,6 +9,11 @@ const nextConfig: NextConfig = {
         hostname: "negocioefranquia.com.br",
         pathname: "/wp-content/uploads/**",
       },
+      {
+        protocol: "https",
+        hostname: "noticias.negocioefranquia.com.br",
+        pathname: "/wp-content/uploads/**",
+      },
     ],
   },
   async redirects() {

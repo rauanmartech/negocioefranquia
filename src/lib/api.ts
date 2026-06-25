@@ -1,6 +1,6 @@
 import { cacheTag, cacheLife } from 'next/cache';
 
-const WP_API = 'https://negocioefranquia.com.br/wp-json/wp/v2';
+const WP_API = 'https://noticias.negocioefranquia.com.br/wp-json/wp/v2';
 
 // ─── Types ────────────────────────────────────────────────────────────────────
 
