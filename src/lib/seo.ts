@@ -25,10 +25,16 @@ export function constructMetadata(
 ): Metadata {
   const title = customTitle || siteConfig.title;
   const description = customDescription || siteConfig.description;
-  const ogImageUrl = image || siteConfig.ogImage;
+  const rawOgImageUrl = image || siteConfig.ogImage;
   const url = canonicalUrl || siteConfig.url;
 
+  // Garantir URL absoluta para a imagem OG (exigência estrita do WhatsApp e iMessage)
+  const ogImageUrl = rawOgImageUrl.startsWith('http') 
+    ? rawOgImageUrl 
+    : `${siteConfig.url.replace(/\/$/, '')}${rawOgImageUrl.startsWith('/') ? '' : '/'}${rawOgImageUrl}`;
+
   return {
+    metadataBase: new URL(siteConfig.url),
     title,
     description,
     authors: [{ name: siteConfig.author }],
@@ -55,6 +61,7 @@ export function constructMetadata(
       images: [
         {
           url: ogImageUrl,
+          secureUrl: ogImageUrl,
           width: 1200,
           height: 630,
           alt: title,
