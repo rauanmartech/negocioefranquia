@@ -26,7 +26,7 @@ function HeroInstitucional() {
           priority
         />
         <div 
-          className="container"
+          className="container hero-content-mobile"
           style={{
             position: 'absolute',
             inset: 0,
@@ -39,7 +39,7 @@ function HeroInstitucional() {
             width: '100%'
           }}
         >
-          <div style={{ maxWidth: '50%' }}>
+          <div className="hero-content-mobile" style={{ maxWidth: '50%' }}>
             <div style={{ marginBottom: '2rem' }}>
               <Image 
                 src="/logo.webp" 
@@ -55,7 +55,9 @@ function HeroInstitucional() {
               Conteúdo, mídia e relacionamento para os mercados de franquias, varejo e shopping centers.
             </p>
 
-            <div style={{ 
+            <div 
+              className="flex-mobile-col"
+              style={{ 
               background: 'rgba(255, 255, 255, 0.95)', 
               backdropFilter: 'blur(12px)', 
               WebkitBackdropFilter: 'blur(12px)',
@@ -145,7 +147,7 @@ function PqNosEscolher() {
             alignItems: 'center'
           }}
         >
-          <div style={{ maxWidth: '55%' }}>
+          <div className="hero-content-mobile" style={{ maxWidth: '55%' }}>
             <span style={{ fontSize: '0.85rem', fontWeight: 800, textTransform: 'uppercase', letterSpacing: '0.05em', margin: '0 0 1rem', display: 'block', color: 'var(--brand-primary)' }}>
               Por Que Nos Escolher?
             </span>

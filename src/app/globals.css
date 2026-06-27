@@ -1,4 +1,5 @@
 @import "tailwindcss";
+@plugin "@tailwindcss/typography";
 
 /* ─── Design Tokens ─────────────────────────────────────────────────────────── */
 :root {
@@ -161,6 +162,72 @@ img {
   color: var(--brand-secondary);
 }
 
+/* ─── Hero Article Card ───────────────────────────────────────────────────────── */
+.hero-article-card {
+  position: relative;
+}
+.hero-img-container {
+  aspect-ratio: 16/9;
+}
+.hero-overlay {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(to top, rgba(10,20,40,0.95) 0%, rgba(10,20,40,0.5) 50%, transparent 100%);
+  pointer-events: none;
+}
+.hero-content {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  padding: clamp(1.25rem, 4vw, 2rem);
+  pointer-events: none;
+}
+.hero-content > * {
+  pointer-events: auto;
+}
+.hero-category {
+  margin-bottom: 0.75rem;
+  display: inline-block;
+}
+.hero-title {
+  color: #fff;
+  font-size: clamp(1.4rem, 3.5vw, 2.25rem);
+  font-weight: 800;
+  line-height: 1.2;
+  letter-spacing: -0.025em;
+  margin: 0 0 0.75rem;
+  text-shadow: 0 2px 8px rgba(0,0,0,0.3);
+}
+.hero-excerpt {
+  color: rgba(255,255,255,0.8);
+  font-size: clamp(0.875rem, 1.5vw, 1rem);
+  margin: 0;
+  line-height: 1.5;
+  max-width: 65ch;
+}
+.hero-meta {
+  margin-top: 1rem;
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+.hero-author {
+  color: rgba(255,255,255,0.65);
+  font-size: 0.8rem;
+}
+.hero-author strong {
+  color: rgba(255,255,255,0.9);
+}
+.hero-dot {
+  color: rgba(255,255,255,0.35);
+  font-size: 0.75rem;
+}
+.hero-date {
+  color: rgba(255,255,255,0.55);
+  font-size: 0.8rem;
+}
+
 /* ─── Skeleton ───────────────────────────────────────────────────────────────── */
 @keyframes shimmer {
   0% { background-position: -400px 0; }
@@ -229,5 +296,104 @@ img {
   font-size: 0.85rem;
   color: var(--gray-500);
   margin-top: 0.5rem;
+}
+
+/* ─── Responsividade Mobile First ────────────────────────────────────────────── */
+html, body {
+  overflow-x: hidden;
+  max-width: 100vw;
+}
+
+@media (max-width: 768px) {
+  h1, h2, h3, h4, h5, h6 {
+    word-break: break-word;
+    overflow-wrap: break-word;
+    hyphens: auto;
+  }
+  
+  h1 {
+    font-size: clamp(1.5rem, 5vw, 2.5rem);
+    line-height: 1.2;
+  }
+  
+  h2 {
+    font-size: clamp(1.25rem, 4vw, 2rem);
+    line-height: 1.3;
+  }
+
+  .prose-editorial h2 { font-size: 1.25rem; }
+  .prose-editorial h3 { font-size: 1.125rem; }
+  
+  .container {
+    padding-inline: 1rem;
+  }
+  
+  .section-label {
+    margin-bottom: 1rem;
+  }
+  
+  /* Ajustes globais de espaçamento mobile */
+  .mb-16 { margin-bottom: 16px !important; }
+  .mb-24 { margin-bottom: 24px !important; }
+  .mb-32 { margin-bottom: 32px !important; }
+  .mb-48 { margin-bottom: 48px !important; }
+  
+  /* Ajustes para Hero Sections e Grids nas Páginas Institucionais */
+  .hero-bg-mobile {
+    width: 100% !important;
+    mask-image: none !important;
+    -webkit-mask-image: none !important;
+    opacity: 0.15 !important;
+  }
+  
+  .hero-content-mobile {
+    max-width: 100% !important;
+  }
+  
+  .hero-gradient-mobile {
+    background: linear-gradient(0deg, rgba(255,255,255,0.95) 0%, rgba(255,255,255,0.85) 100%) !important;
+  }
+  
+  .flex-mobile-col {
+    flex-direction: column !important;
+  }
+  
+  /* Hero Article mobile editorial layout */
+  .hero-article-card {
+    display: flex !important;
+    flex-direction: column;
+    border: 1px solid var(--gray-200);
+    background: #fff;
+  }
+  .hero-img-container {
+    aspect-ratio: 16/9;
+  }
+  .hero-overlay {
+    display: none !important;
+  }
+  .hero-content {
+    position: relative !important;
+    padding: 1.25rem 1rem !important;
+  }
+  .hero-title {
+    color: var(--gray-900) !important;
+    text-shadow: none !important;
+    font-size: clamp(1.25rem, 5vw, 1.5rem) !important;
+  }
+  .hero-excerpt {
+    color: var(--gray-600) !important;
+  }
+  .hero-author {
+    color: var(--gray-500) !important;
+  }
+  .hero-author strong {
+    color: var(--gray-900) !important;
+  }
+  .hero-dot {
+    color: var(--gray-300) !important;
+  }
+  .hero-date {
+    color: var(--gray-400) !important;
+  }
 }
 

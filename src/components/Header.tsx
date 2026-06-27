@@ -62,7 +62,7 @@ export default function Header() {
 
       {/* Main header */}
       <div
-        className="container"
+        className="container main-header"
         style={{
           display: 'flex',
           alignItems: 'center',
@@ -101,7 +101,7 @@ export default function Header() {
         </button>
 
         {/* Logo (centered) */}
-        <div style={{ position: 'absolute', left: '50%', transform: 'translateX(-50%)', zIndex: 1 }}>
+        <div className="logo-container" style={{ position: 'absolute', left: '50%', transform: 'translateX(-50%)', zIndex: 1 }}>
           <Link href="/quem-somos" style={{ display: 'flex', alignItems: 'center' }}>
             <Image
               src="/logo.webp"
@@ -109,13 +109,14 @@ export default function Header() {
               width={385}
               height={105}
               style={{ height: '96px', width: 'auto', objectFit: 'contain' }}
+              className="logo-img"
               priority
             />
           </Link>
         </div>
 
         {/* CTA + Search (right) */}
-        <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', zIndex: 2 }}>
+        <div className="right-actions" style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', zIndex: 2 }}>
           <Link
             href="/anuncie"
             style={{
@@ -149,7 +150,7 @@ export default function Header() {
               justifyContent: 'center',
               padding: '0.4rem',
               borderRadius: '50%',
-              transition: 'color 200ms, background 200ms'
+              transition: 'color 200ms, background 200ms',
             }}
             className="search-btn"
           >
@@ -488,6 +489,47 @@ export default function Header() {
 
         @media (max-width: 900px) {
           .bottom-nav { display: none !important; }
+          .main-header {
+            padding: 1rem 1rem !important;
+            min-height: auto !important;
+            display: grid !important;
+            grid-template-columns: auto 1fr auto;
+            grid-template-areas: 
+              "hamburger logo search"
+              "anuncie anuncie anuncie";
+            gap: 1rem;
+            align-items: center;
+          }
+          .hamburger-main {
+            grid-area: hamburger;
+            padding: 0 !important;
+          }
+          .logo-container {
+            grid-area: logo;
+            position: relative !important;
+            left: auto !important;
+            transform: none !important;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+          }
+          .logo-img {
+            height: 42px !important;
+            width: auto !important;
+          }
+          .right-actions {
+            display: contents !important;
+          }
+          .search-btn {
+            grid-area: search;
+            justify-self: end;
+          }
+          .cta-btn {
+            grid-area: anuncie;
+            display: flex !important;
+            justify-content: center;
+            width: 100%;
+          }
         }
       `}</style>
     </header>

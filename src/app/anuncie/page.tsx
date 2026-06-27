@@ -116,7 +116,7 @@ function HeroAnuncie() {
         zIndex: 0,
         maskImage: 'linear-gradient(to left, black 40%, transparent 100%)',
         WebkitMaskImage: 'linear-gradient(to left, black 40%, transparent 100%)',
-      }} />
+      }} className="hero-bg-mobile" />
 
       <div className="container" style={{ position: 'relative', zIndex: 1 }}>
         <span style={{

@@ -42,6 +42,7 @@ interface AdBannerProps {
 
 export default function AdBanner({ width = 970, height = 250 }: AdBannerProps) {
   const instanceId = useId();
+  const containerRef = useRef<HTMLDivElement>(null);
   const iframeRef = useRef<HTMLIFrameElement>(null);
   // Guard para React Strict Mode (dupla montagem em desenvolvimento)
   const initialized = useRef(false);
@@ -52,29 +53,30 @@ export default function AdBanner({ width = 970, height = 250 }: AdBannerProps) {
     const iframe = iframeRef.current;
     if (!iframe) return;
 
-    // Marca como inicializado somente após confirmar que o iframe existe.
-    // O cleanup reseta o flag na desmontagem, garantindo que ao retornar
-    // para a Home o anúncio seja recriado corretamente.
     initialized.current = true;
 
-    // Acessa o documento interno do iframe
     const iframeDoc =
       iframe.contentDocument ?? iframe.contentWindow?.document;
     if (!iframeDoc) return;
 
-    // HTML completo do anúncio isolado dentro do iframe.
-    // O document.write do Space fica confinado aqui — não afeta a página principal.
+    // HTML limpo: sem CSS agressivo que possa quebrar o anúncio internamente.
+    // O body tem exatamente o tamanho do anúncio.
     const adHtml = `<!DOCTYPE html>
 <html>
   <head>
     <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <style>
       * { margin: 0; padding: 0; box-sizing: border-box; }
-      body { overflow: hidden; background: transparent; }
+      body { 
+        width: ${width}px; 
+        height: ${height}px; 
+        overflow: hidden; 
+        background: transparent; 
+      }
     </style>
   </head>
   <body>
-    <!-- Enfileira o anúncio ANTES de carregar o script externo -->
     <script type="text/javascript">
       var space = space || {};
       space.runs = space.runs || [];
@@ -82,7 +84,6 @@ export default function AdBanner({ width = 970, height = 250 }: AdBannerProps) {
         space.ad('${AD_TOKEN}').setSize(${width}, ${height}).setMacro('').fire();
       });
     </script>
-    <!-- Script externo Space — carregado aqui, isolado no iframe -->
     <script src="${SPACE_SRC}" type="text/javascript"></script>
   </body>
 </html>`;
@@ -91,16 +92,45 @@ export default function AdBanner({ width = 970, height = 250 }: AdBannerProps) {
     iframeDoc.write(adHtml);
     iframeDoc.close();
 
-    // Cleanup: reseta o guard ao desmontar (ex: ao sair da Home).
-    // Garante que ao retornar para a Home o anúncio seja recriado corretamente,
-    // sem duplicatas e sem estado residual entre navegações.
     return () => {
       initialized.current = false;
     };
   }, [width, height]);
 
+  // ResizeObserver para escalar o iframe no mobile perfeitamente
+  useEffect(() => {
+    const container = containerRef.current;
+    const iframe = iframeRef.current;
+    if (!container || !iframe) return;
+
+    const resizeObserver = new ResizeObserver((entries) => {
+      for (const entry of entries) {
+        const containerWidth = entry.contentRect.width;
+        if (containerWidth > 0 && containerWidth < width) {
+          // Calcula a proporção para caber exatamente no container
+          const scale = containerWidth / width;
+          iframe.style.transform = `scale(${scale})`;
+          iframe.style.transformOrigin = '0 0'; // Top Left
+          // Ajusta a altura do container para o tamanho escalado
+          container.style.height = `${height * scale}px`;
+        } else {
+          // Sem escala no desktop
+          iframe.style.transform = 'none';
+          container.style.height = `${height}px`;
+        }
+      }
+    });
+
+    resizeObserver.observe(container);
+
+    return () => {
+      resizeObserver.disconnect();
+    };
+  }, [width, height]);
+
   return (
     <div
+      ref={containerRef}
       aria-label="Espaço publicitário"
       style={{
         width: '100%',
@@ -108,9 +138,10 @@ export default function AdBanner({ width = 970, height = 250 }: AdBannerProps) {
         height: `${height}px`,
         margin: '0 auto',
         overflow: 'hidden',
-        // Reserva o espaço visual antes do ad carregar
+        display: 'block', // Block com margin: 0 auto garante alinhamento à esquerda para o scale funcionar
         background: 'transparent',
       }}
+      className="ad-banner-container"
     >
       <iframe
         ref={iframeRef}
@@ -118,13 +149,12 @@ export default function AdBanner({ width = 970, height = 250 }: AdBannerProps) {
         title="Publicidade"
         aria-label="Anúncio publicitário"
         scrolling="no"
+        className="ad-iframe-responsive"
         style={{
-          width: `${width}px`,
-          height: `${height}px`,
+          width: `${width}px`, 
+          height: `${height}px`, 
           border: 'none',
           display: 'block',
-          // Mantém o iframe dentro do container sem vazar
-          maxWidth: '100%',
         }}
       />
     </div>

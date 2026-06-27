@@ -10,11 +10,11 @@ export function HeroArticle({ article }: { article: Article }) {
   return (
     <Link
       href={`/noticia/${article.slug}`}
-      style={{ textDecoration: 'none', display: 'block', position: 'relative', borderRadius: '6px', overflow: 'hidden' }}
-      className="img-overlay"
+      style={{ textDecoration: 'none', display: 'block', borderRadius: '6px', overflow: 'hidden' }}
+      className="hero-article-card card-hover"
     >
-      {/* Image */}
-      <div style={{ position: 'relative', aspectRatio: '16/9', minHeight: 340, background: 'var(--gray-200)' }}>
+      {/* Image Container */}
+      <div className="hero-img-container" style={{ position: 'relative', background: 'var(--gray-200)' }}>
         {article.imageUrl ? (
           <Image
             src={article.imageUrl}
@@ -27,59 +27,31 @@ export function HeroArticle({ article }: { article: Article }) {
         ) : (
           <div style={{ width: '100%', height: '100%', background: 'linear-gradient(135deg, var(--brand-primary), var(--brand-secondary))' }} />
         )}
+        <div className="hero-overlay" />
+      </div>
 
-        {/* Gradient overlay */}
-        <div
-          style={{
-            position: 'absolute', inset: 0,
-            background: 'linear-gradient(to top, rgba(10,20,40,0.95) 0%, rgba(10,20,40,0.5) 50%, transparent 100%)',
-          }}
+      {/* Content Container */}
+      <div className="hero-content">
+        {category && (
+          <span className="category-badge hero-category">
+            {category.name}
+          </span>
+        )}
+        <h2
+          className="hero-title"
+          dangerouslySetInnerHTML={{ __html: article.title }}
         />
-
-        {/* Content */}
-        <div
-          style={{
-            position: 'absolute', bottom: 0, left: 0, right: 0,
-            padding: 'clamp(1.25rem, 4vw, 2rem)',
-          }}
-        >
-          {category && (
-            <span className="category-badge" style={{ marginBottom: '0.75rem', display: 'inline-block' }}>
-              {category.name}
-            </span>
-          )}
-          <h2
-            style={{
-              color: '#fff',
-              fontSize: 'clamp(1.4rem, 3.5vw, 2.25rem)',
-              fontWeight: 800,
-              lineHeight: 1.2,
-              letterSpacing: '-0.025em',
-              margin: '0 0 0.75rem',
-              textShadow: '0 2px 8px rgba(0,0,0,0.3)',
-            }}
-            dangerouslySetInnerHTML={{ __html: article.title }}
-          />
-          <p
-            style={{
-              color: 'rgba(255,255,255,0.8)',
-              fontSize: 'clamp(0.875rem, 1.5vw, 1rem)',
-              margin: 0,
-              lineHeight: 1.5,
-              maxWidth: '65ch',
-            }}
-          >
-            {truncate(article.excerpt, 150)}
-          </p>
-          <div style={{ marginTop: '1rem', display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
-            <span style={{ color: 'rgba(255,255,255,0.65)', fontSize: '0.8rem' }}>
-              Por <strong style={{ color: 'rgba(255,255,255,0.9)' }}>{article.authorName}</strong>
-            </span>
-            <span style={{ color: 'rgba(255,255,255,0.35)', fontSize: '0.75rem' }}>·</span>
-            <span style={{ color: 'rgba(255,255,255,0.55)', fontSize: '0.8rem' }}>
-              {formatDateShort(article.date)}
-            </span>
-          </div>
+        <p className="hero-excerpt">
+          {truncate(article.excerpt, 150)}
+        </p>
+        <div className="hero-meta">
+          <span className="hero-author">
+            Por <strong>{article.authorName}</strong>
+          </span>
+          <span className="hero-dot">·</span>
+          <span className="hero-date">
+            {formatDateShort(article.date)}
+          </span>
         </div>
       </div>
     </Link>
