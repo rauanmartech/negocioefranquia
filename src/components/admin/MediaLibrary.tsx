@@ -47,7 +47,10 @@ export default function MediaLibrary() {
         ...(search ? { search } : {}),
       });
       const res = await fetch(`/api/media?${params}`);
-      if (!res.ok) throw new Error("Failed to load media");
+      if (!res.ok) {
+        const errText = await res.text();
+        throw new Error(`Failed to load media: ${res.status} - ${errText}`);
+      }
       const data = await res.json();
       setItems(data.items);
       setTotal(data.total);
