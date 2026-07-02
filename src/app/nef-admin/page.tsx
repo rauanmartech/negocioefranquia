@@ -15,7 +15,7 @@ async function DashboardContent() {
       author: { select: { name: true } },
       category: { select: { name: true } },
     },
-  });
+  }).catch(() => []);
 
   const statusLabel: Record<string, { label: string; classes: string }> = {
     PUBLISHED: { label: "Publicado", classes: "bg-green-100 text-green-800" },
