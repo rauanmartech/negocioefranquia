@@ -169,6 +169,10 @@ export default function PostForm({ authors, categories, tags, initialData }: Pos
     }));
   };
 
+  const hasAuthors    = authors.length > 0;
+  const hasCategories = categories.length > 0;
+  const canSubmit     = hasAuthors && hasCategories;
+
   return (
     <form onSubmit={handleSubmit} className="space-y-8">
       <div className="flex items-center justify-between">
@@ -185,13 +189,22 @@ export default function PostForm({ authors, categories, tags, initialData }: Pos
           </button>
           <button
             type="submit"
-            disabled={isSubmitting}
-            className="px-4 py-2 bg-blue-600 rounded text-sm font-medium text-white hover:bg-blue-700 transition-colors disabled:opacity-50"
+            disabled={isSubmitting || !canSubmit}
+            className="px-4 py-2 bg-blue-600 rounded text-sm font-medium text-white hover:bg-blue-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
           >
             {isSubmitting ? "Salvando..." : "Salvar Notícia"}
           </button>
         </div>
       </div>
+
+      {/* Aviso quando faltam dados obrigatórios no sistema */}
+      {!canSubmit && (
+        <div className="bg-amber-50 border border-amber-300 text-amber-800 px-4 py-3 rounded text-sm space-y-1">
+          <p className="font-semibold">⚠️ Não é possível criar um post ainda:</p>
+          {!hasAuthors    && <p>• Não há <strong>autores ativos</strong> cadastrados. Cadastre um autor antes de continuar.</p>}
+          {!hasCategories && <p>• Não há <strong>categorias ativas</strong> cadastradas. Cadastre uma categoria antes de continuar.</p>}
+        </div>
+      )}
 
       {submitError && (
         <div className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded text-sm">

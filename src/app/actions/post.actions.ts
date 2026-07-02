@@ -1,4 +1,4 @@
-﻿'use server';
+'use server';
 
 import { createClient } from '@/utils/supabase/server';
 import prisma from '@/lib/prisma';
@@ -61,6 +61,15 @@ function serializePost(post: any) {
   };
 }
 
+// ----- Validação de payload --------------------------------------------------
+function validatePostPayload(data: PostCreateInput | PostUpdateInput): string | null {
+  if (!data.title?.trim())      return 'O título é obrigatório.';
+  if (!data.slug?.trim())       return 'O slug é obrigatório.';
+  if (!data.authorId?.trim())   return 'Selecione um autor. Não há autores cadastrados ou ativos no sistema — cadastre um autor antes de criar um post.';
+  if (!data.categoryId?.trim()) return 'Selecione uma categoria. Não há categorias cadastradas ou ativas no sistema.';
+  return null;
+}
+
 // ----- Create Post -----------------------------------------------------------
 export async function createPostAction(data: PostCreateInput) {
   console.log('[createPostAction] Iniciando criacao de post...');
@@ -74,6 +83,13 @@ export async function createPostAction(data: PostCreateInput) {
     tagsCount: data.tags?.length ?? 0,
     hasSeoTitle: !!data.seoTitle,
   }));
+
+  // Validação antes de tocar no banco — evita FK violation mascarado como digest
+  const validationError = validatePostPayload(data);
+  if (validationError) {
+    console.error('[createPostAction] Validacao falhou:', validationError);
+    return { success: false, error: validationError };
+  }
 
   try {
     console.log('[createPostAction] -> Etapa 1: Autenticacao');
@@ -106,6 +122,12 @@ export async function createPostAction(data: PostCreateInput) {
 // ----- Update Post -----------------------------------------------------------
 export async function updatePostAction(id: string, data: PostUpdateInput) {
   console.log('[updatePostAction] Iniciando atualizacao do post:', id);
+
+  const validationError = validatePostPayload(data);
+  if (validationError) {
+    console.error('[updatePostAction] Validacao falhou:', validationError);
+    return { success: false, error: validationError };
+  }
 
   try {
     console.log('[updatePostAction] -> Etapa 1: Autenticacao');
