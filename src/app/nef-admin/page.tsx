@@ -26,19 +26,7 @@ async function DashboardContent() {
   };
 
   return (
-    <div className="space-y-6">
-      <div className="flex justify-between items-center">
-        <h1 className="text-2xl font-bold text-gray-900">Notícias</h1>
-        <Link
-          href="/nef-admin/new"
-          className="flex items-center gap-2 bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700 transition-colors text-sm font-medium"
-        >
-          <Plus size={18} />
-          Nova Notícia
-        </Link>
-      </div>
-
-      <div className="bg-white border border-gray-200 rounded-lg shadow-sm overflow-hidden">
+    <div className="bg-white border border-gray-200 rounded-lg shadow-sm overflow-hidden">
         {posts.length === 0 ? (
           <div className="p-12 text-center text-gray-500 space-y-2">
             <p className="font-medium">Nenhuma notícia encontrada.</p>
@@ -104,7 +92,6 @@ async function DashboardContent() {
           </table>
         )}
       </div>
-    </div>
   );
 }
 
