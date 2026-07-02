@@ -1,20 +1,29 @@
 import { NextResponse } from 'next/server'
 import type { NextRequest } from 'next/server'
-import { createClient as createSupabaseMiddlewareClient } from '@/utils/supabase/middleware'
+import { createClient } from '@/utils/supabase/middleware'
 
-export function middleware(request: NextRequest) {
+export async function middleware(request: NextRequest) {
   // Refresh Supabase session on every request (required by @supabase/ssr)
-  const supabaseResponse = createSupabaseMiddlewareClient(request)
+  const { supabase, supabaseResponse } = createClient(request)
 
-  // Check if we are trying to access the admin area
+  // IMPORTANT: Do not add logic between createClient and supabase.auth.getUser()
+  // A simple mistake could cause random session expiry for users.
+  const {
+    data: { user },
+  } = await supabase.auth.getUser()
+
+  // Protect the /nef-admin routes
   if (request.nextUrl.pathname.startsWith('/nef-admin')) {
-    const isAuth = request.cookies.has('nef_auth')
-
-    // If not authenticated, redirect to login
-    if (!isAuth) {
+    if (!user) {
       const loginUrl = new URL('/nef-login', request.url)
       return NextResponse.redirect(loginUrl)
     }
+  }
+
+  // Redirect logged-in users away from the login page
+  if (request.nextUrl.pathname.startsWith('/nef-login') && user) {
+    const adminUrl = new URL('/nef-admin', request.url)
+    return NextResponse.redirect(adminUrl)
   }
 
   return supabaseResponse
@@ -24,6 +33,7 @@ export function middleware(request: NextRequest) {
 export const config = {
   matcher: [
     '/nef-admin/:path*',
+    '/nef-login',
     /*
      * Match all request paths except static files and images,
      * so Supabase session is refreshed on every navigation.
@@ -31,4 +41,3 @@ export const config = {
     '/((?!_next/static|_next/image|favicon.ico|.*\\.(?:svg|png|jpg|jpeg|gif|webp)$).*)',
   ],
 }
-

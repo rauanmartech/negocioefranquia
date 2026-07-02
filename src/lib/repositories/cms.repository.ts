@@ -9,14 +9,12 @@
  */
 
 import { createClient } from '@/utils/supabase/server';
-import { cookies } from 'next/headers';
 import type { Article } from '@/lib/types/content';
 
 // ─── Helper ───────────────────────────────────────────────────────────────────
 
 async function getSupabase() {
-  const cookieStore = await cookies();
-  return createClient(cookieStore);
+  return createClient();
 }
 
 // ─── Select fragment reutilizável ─────────────────────────────────────────────
