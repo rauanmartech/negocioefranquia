@@ -1,5 +1,6 @@
 "use client";
 
+import Image from "next/image";
 import { useState } from "react";
 import { login } from "./actions";
 
@@ -29,12 +30,19 @@ export default function LoginPage() {
   return (
     <div className="min-h-screen flex items-center justify-center bg-gray-50">
       <div className="max-w-md w-full p-8 bg-white shadow-sm border border-gray-100 rounded-lg">
-        <h1 className="text-2xl font-semibold text-center mb-6 text-gray-900">
-          Negócio & Franquia
-          <span className="block text-sm font-normal text-gray-500 mt-1">
+        <div className="flex flex-col items-center justify-center mb-6">
+          <Image
+            src="/logo.webp"
+            alt="Negócio & Franquia"
+            width={160}
+            height={48}
+            style={{ height: "40px", width: "auto", objectFit: "contain" }}
+            priority
+          />
+          <span className="block text-sm font-normal text-gray-500 mt-2">
             Painel Administrativo
           </span>
-        </h1>
+        </div>
 
         <form onSubmit={handleLogin} className="space-y-4">
           <div>
