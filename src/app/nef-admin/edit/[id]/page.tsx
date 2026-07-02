@@ -1,35 +1,55 @@
-"use client";
-
-import { useEffect, useState, use } from "react";
-import { useRouter } from "next/navigation";
+import { notFound } from "next/navigation";
+import { PostService } from "@/lib/services/post.service";
 import PostForm from "@/components/admin/PostForm";
-import { postsRepository } from "@/lib/data/postsRepository";
-import { Post } from "@/types/post";
+import { Suspense } from "react";
+
+async function EditPostContent({ params }: { params: Promise<{ id: string }> }) {
+  const { id } = await params;
+  const [post, { categories, authors, tags }] = await Promise.all([
+    PostService.getPostForEdit(id),
+    PostService.getAuxiliaryData(),
+  ]);
+
+  if (!post) notFound();
+
+  return (
+    <PostForm
+      authors={authors}
+      categories={categories}
+      tags={tags}
+      initialData={{
+        id: post.id,
+        title: post.title,
+        subtitle: post.subtitle,
+        slug: post.slug,
+        excerpt: post.excerpt,
+        content: post.content,
+        status: post.status,
+        authorId: post.authorId,
+        categoryId: post.categoryId,
+        featuredImageId: post.featuredImageId,
+        hero: post.hero,
+        featured: post.featured,
+        breaking: post.breaking,
+        allowComments: post.allowComments,
+        seo: post.seo
+          ? {
+              seoTitle: post.seo.seoTitle,
+              seoDescription: post.seo.seoDescription,
+              ogImage: post.seo.ogImage,
+              seoKeywords: post.seo.seoKeywords,
+            }
+          : null,
+        tags: post.tags,
+      }}
+    />
+  );
+}
 
 export default function EditPostPage({ params }: { params: Promise<{ id: string }> }) {
-  const router = useRouter();
-  const [post, setPost] = useState<Post | null>(null);
-  const [isLoading, setIsLoading] = useState(true);
-  const resolvedParams = use(params);
-
-  useEffect(() => {
-    const data = postsRepository.getPostById(resolvedParams.id);
-    if (!data) {
-      alert("Notícia não encontrada!");
-      router.push("/nef-admin");
-    } else {
-      setPost(data);
-    }
-    setIsLoading(false);
-  }, [resolvedParams.id, router]);
-
-  if (isLoading) {
-    return <div className="p-8 text-center text-gray-500">Carregando...</div>;
-  }
-
-  if (!post) {
-    return null;
-  }
-
-  return <PostForm initialData={post} />;
+  return (
+    <Suspense fallback={<div className="p-12 text-center text-gray-500">Carregando post...</div>}>
+      <EditPostContent params={params} />
+    </Suspense>
+  );
 }

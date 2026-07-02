@@ -1,3 +1,4 @@
+import type { ElementType } from 'react';
 import { Block } from '../types';
 
 interface BlockRendererProps {
@@ -21,7 +22,7 @@ export function BlockRenderer({ blocks }: BlockRendererProps) {
             );
           
           case 'heading': {
-            const Tag = `h${block.data.level || 2}` as keyof JSX.IntrinsicElements;
+            const Tag = `h${block.data.level || 2}` as ElementType;
             return (
               <Tag key={block.id} className="font-bold text-gray-900 mt-8 mb-4">
                 {block.data.text}

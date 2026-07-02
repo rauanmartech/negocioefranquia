@@ -8,13 +8,20 @@
  * para nunca quebrar o site enquanto o banco ainda estiver vazio.
  */
 
-import { createClient } from '@/utils/supabase/server';
+import { createClient } from '@supabase/supabase-js';
 import type { Article } from '@/lib/types/content';
 
 // ─── Helper ───────────────────────────────────────────────────────────────────
 
+let supabaseClient: ReturnType<typeof createClient> | null = null;
+
 async function getSupabase() {
-  return createClient();
+  if (!supabaseClient) {
+    const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL!;
+    const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!;
+    supabaseClient = createClient(supabaseUrl, supabaseAnonKey);
+  }
+  return supabaseClient;
 }
 
 // ─── Select fragment reutilizável ─────────────────────────────────────────────
@@ -96,13 +103,13 @@ export async function cmsGetPostsByCategory(
       .eq('slug', categorySlug)
       .maybeSingle();
 
-    if (!catData?.id) return [];
+    if (!(catData as any)?.id) return [];
 
     const { data, error } = await supabase
       .from('posts')
       .select(POST_SELECT)
       .eq('status', 'PUBLISHED')
-      .eq('category_id', catData.id)
+      .eq('category_id', (catData as any).id)
       .order('published_at', { ascending: false })
       .limit(count);
 
@@ -131,7 +138,7 @@ export async function cmsGetPostBySlug(slug: string): Promise<Article | null> {
     if (error || !data) return null;
     const article = normalizeRow(data);
     // Inclui conteúdo completo na página individual
-    article.content = data.content ? JSON.stringify(data.content) : '';
+    article.content = (data as any).content ? JSON.stringify((data as any).content) : '';
     return article;
   } catch (err) {
     console.error('[CMS Repository] getPostBySlug failed:', err);

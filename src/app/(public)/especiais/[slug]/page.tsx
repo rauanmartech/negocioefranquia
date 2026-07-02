@@ -12,7 +12,7 @@ export async function generateStaticParams() {
 
 // ─── Metadata dinâmica ────────────────────────────────────────────────────────
 export async function generateMetadata(
-  props: PageProps<'/especiais/[slug]'>
+  props: { params: Promise<{ slug: string }> }
 ): Promise<Metadata> {
   const { slug } = await props.params;
   const projeto = getProjetoBySlug(slug);
@@ -52,7 +52,7 @@ function Breadcrumb({ nome }: { nome: string }) {
 }
 
 // ─── Page ─────────────────────────────────────────────────────────────────────
-export default async function EspecialSlugPage(props: PageProps<'/especiais/[slug]'>) {
+export default async function EspecialSlugPage(props: { params: Promise<{ slug: string }> }) {
   const { slug } = await props.params;
   const projeto = getProjetoBySlug(slug);
 

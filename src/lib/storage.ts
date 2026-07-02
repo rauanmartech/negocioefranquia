@@ -13,13 +13,13 @@
 import { createClient } from '@supabase/supabase-js';
 
 const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL!;
-const supabaseKey = process.env.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY!;
+const supabaseKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!;
 
 // Client com service_role para operações de upload (server-side apenas)
 // Na produção, use SUPABASE_SERVICE_ROLE_KEY para uploads autenticados
 const supabase = createClient(supabaseUrl, supabaseKey);
 
-export type StorageBucket = 'media' | 'avatars' | 'assets';
+export type StorageBucket = 'news-images' | 'avatars' | 'documents' | 'ads' | 'specials' | 'play';
 
 // ─── Upload ───────────────────────────────────────────────────────────────────
 
