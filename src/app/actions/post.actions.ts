@@ -15,6 +15,20 @@ async function getAuthenticatedUserId() {
   return user.id;
 }
 
+// DTO / Mapper para garantir que o objeto retornado seja 100% serializável
+// Remove o protótipo do Prisma e converte campos de Date para string
+function serializePost(post: any) {
+  if (!post) return null;
+  
+  return {
+    ...post,
+    createdAt: post.createdAt ? post.createdAt.toISOString() : undefined,
+    updatedAt: post.updatedAt ? post.updatedAt.toISOString() : undefined,
+    publishedAt: post.publishedAt ? post.publishedAt.toISOString() : null,
+    scheduledAt: post.scheduledAt ? post.scheduledAt.toISOString() : null,
+  };
+}
+
 export async function createPostAction(data: PostCreateInput) {
   try {
     const userId = await getAuthenticatedUserId();
@@ -26,7 +40,7 @@ export async function createPostAction(data: PostCreateInput) {
     // Revalidar rotas (opcional)
     revalidatePath('/nef-admin/posts');
     
-    return { success: true, post };
+    return { success: true, post: serializePost(post) };
   } catch (error: any) {
     console.error('Error in createPostAction:', error);
     return { success: false, error: error.message };
@@ -43,7 +57,7 @@ export async function updatePostAction(id: string, data: PostUpdateInput) {
     revalidatePath('/nef-admin/posts');
     revalidatePath(`/noticias/${post.slug}`);
     
-    return { success: true, post };
+    return { success: true, post: serializePost(post) };
   } catch (error: any) {
     console.error('Error in updatePostAction:', error);
     return { success: false, error: error.message };
