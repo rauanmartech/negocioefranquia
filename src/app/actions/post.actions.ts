@@ -1,25 +1,57 @@
-'use server';
+﻿'use server';
 
 import { createClient } from '@/utils/supabase/server';
+import prisma from '@/lib/prisma';
 import { PostCreateInput, PostService, PostUpdateInput } from '@/lib/services/post.service';
 import { revalidatePath } from 'next/cache';
 
-async function getAuthenticatedUserId() {
+// ----- Auth Helper -----------------------------------------------------------
+// CORRECAO CRITICA: O Supabase retorna user.id = supabase_id (UUID do Auth).
+// O campo createdById no Post e FK para User.id (UUID interno da tabela users).
+// Usar supabase_id diretamente causava FK constraint violation -> digest error.
+async function getAuthenticatedUserId(): Promise<string> {
+  console.log('[auth] Iniciando getAuthenticatedUserId...');
+
   const supabase = await createClient();
   const { data: { user }, error } = await supabase.auth.getUser();
-  
-  if (error || !user) {
-    throw new Error('Unauthorized');
+
+  if (error) {
+    console.error('[auth] Erro ao buscar usuario Supabase:', error.message);
+    throw new Error(`Auth error: ${error.message}`);
   }
-  
-  return user.id;
+
+  if (!user) {
+    console.error('[auth] Nenhum usuario autenticado encontrado.');
+    throw new Error('Unauthorized: no session');
+  }
+
+  console.log('[auth] Supabase user.id (supabase_id):', user.id);
+
+  // Buscar o ID interno da tabela users pelo supabaseId
+  const internalUser = await prisma.user.findUnique({
+    where: { supabaseId: user.id },
+    select: { id: true },
+  });
+
+  if (!internalUser) {
+    console.error(
+      '[auth] Usuario interno NAO encontrado na tabela users para supabaseId:',
+      user.id,
+      '-- O usuario precisa ter um perfil criado na tabela users com supabase_id correspondente.'
+    );
+    throw new Error(
+      `User not found in database for supabaseId: ${user.id}. ` +
+      'Certifique-se de que existe um registro na tabela users com este supabase_id.'
+    );
+  }
+
+  console.log('[auth] User interno encontrado -> id:', internalUser.id);
+  return internalUser.id;
 }
 
-// DTO / Mapper para garantir que o objeto retornado seja 100% serializável
-// Remove o protótipo do Prisma e converte campos de Date para string
+// ----- Serializer ------------------------------------------------------------
 function serializePost(post: any) {
   if (!post) return null;
-  
   return {
     ...post,
     createdAt: post.createdAt ? post.createdAt.toISOString() : undefined,
@@ -29,37 +61,77 @@ function serializePost(post: any) {
   };
 }
 
+// ----- Create Post -----------------------------------------------------------
 export async function createPostAction(data: PostCreateInput) {
+  console.log('[createPostAction] Iniciando criacao de post...');
+  console.log('[createPostAction] Payload:', JSON.stringify({
+    title: data.title,
+    slug: data.slug,
+    status: data.status,
+    authorId: data.authorId,
+    categoryId: data.categoryId,
+    featuredImageId: data.featuredImageId,
+    tagsCount: data.tags?.length ?? 0,
+    hasSeoTitle: !!data.seoTitle,
+  }));
+
   try {
+    console.log('[createPostAction] -> Etapa 1: Autenticacao');
     const userId = await getAuthenticatedUserId();
-    
-    // Validação extra poderia ocorrer aqui (ex: Zod)
-    
+    console.log('[createPostAction] OK userId interno:', userId);
+
+    console.log('[createPostAction] -> Etapa 2: PostService.createPost');
     const post = await PostService.createPost(data, userId);
-    
-    // Revalidar rotas (opcional)
+    console.log('[createPostAction] OK Post criado, id:', post.id);
+
+    revalidatePath('/nef-admin');
     revalidatePath('/nef-admin/posts');
-    
+
     return { success: true, post: serializePost(post) };
   } catch (error: any) {
-    console.error('Error in createPostAction:', error);
-    return { success: false, error: error.message };
+    console.error('[createPostAction] ERRO CAPTURADO:');
+    console.error('  message:', error?.message);
+    console.error('  code (Prisma):', error?.code);
+    console.error('  meta (Prisma):', JSON.stringify(error?.meta));
+    console.error('  stack:', error?.stack);
+    return {
+      success: false,
+      error: error?.meta
+        ? `Erro de banco [${error.code}]: ${error.message} | meta: ${JSON.stringify(error.meta)}`
+        : error?.message ?? 'Erro desconhecido ao criar post',
+    };
   }
 }
 
+// ----- Update Post -----------------------------------------------------------
 export async function updatePostAction(id: string, data: PostUpdateInput) {
+  console.log('[updatePostAction] Iniciando atualizacao do post:', id);
+
   try {
+    console.log('[updatePostAction] -> Etapa 1: Autenticacao');
     const userId = await getAuthenticatedUserId();
-    
+    console.log('[updatePostAction] OK userId interno:', userId);
+
+    console.log('[updatePostAction] -> Etapa 2: PostService.updatePost');
     const post = await PostService.updatePost(id, data, userId);
-    
-    // Revalidar rotas
+    console.log('[updatePostAction] OK Post atualizado, slug:', post.slug);
+
+    revalidatePath('/nef-admin');
     revalidatePath('/nef-admin/posts');
     revalidatePath(`/noticias/${post.slug}`);
-    
+
     return { success: true, post: serializePost(post) };
   } catch (error: any) {
-    console.error('Error in updatePostAction:', error);
-    return { success: false, error: error.message };
+    console.error('[updatePostAction] ERRO CAPTURADO:');
+    console.error('  message:', error?.message);
+    console.error('  code (Prisma):', error?.code);
+    console.error('  meta (Prisma):', JSON.stringify(error?.meta));
+    console.error('  stack:', error?.stack);
+    return {
+      success: false,
+      error: error?.meta
+        ? `Erro de banco [${error.code}]: ${error.message} | meta: ${JSON.stringify(error.meta)}`
+        : error?.message ?? 'Erro desconhecido ao atualizar post',
+    };
   }
 }

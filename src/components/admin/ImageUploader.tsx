@@ -4,7 +4,8 @@ import { useRef, useState } from "react";
 import { Upload, X, Loader2 } from "lucide-react";
 
 interface ImageUploaderProps {
-  onUpload: (url: string) => void;
+  // mediaId: ID do registro na tabela media (para salvar como featuredImageId no post)
+  onUpload: (url: string, mediaId?: string) => void;
   currentUrl?: string;
   onRemove?: () => void;
   bucket?: string;
@@ -116,7 +117,8 @@ export default function ImageUploader({
       }
 
       const data = await res.json();
-      onUpload(data.url);
+      // Passa url E id do media para o componente pai poder salvar featuredImageId
+      onUpload(data.url, data.id);
     } catch (err: any) {
       setError(err.message || "Erro no upload");
     } finally {

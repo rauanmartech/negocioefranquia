@@ -95,8 +95,13 @@ export default function PostForm({ authors, categories, tags, initialData }: Pos
     }
   };
 
-  const handleCoverUpload = (url: string) => {
-    setFormData((prev) => ({ ...prev, coverImageUrl: url }));
+  const handleCoverUpload = (url: string, mediaId?: string) => {
+    setFormData((prev) => ({
+      ...prev,
+      coverImageUrl: url,
+      // Salvar o id do media para enviar como featuredImageId ao Prisma
+      ...(mediaId ? { featuredImageId: mediaId } : {}),
+    }));
     if (!seoData.ogImage) {
       setSeoData((prev) => ({ ...prev, ogImage: url }));
     }
