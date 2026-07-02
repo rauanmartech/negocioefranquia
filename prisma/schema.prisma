@@ -1,0 +1,455 @@
+// ─── Prisma Schema — Negócio & Franquia Editorial Platform ───────────────────
+// Documentação: docs/arquitetura/02-schema-banco.md
+// Regras:
+//   - UUID como PK em todas as tabelas
+//   - createdAt @default(now()) em todas as tabelas
+//   - updatedAt @updatedAt em todas as tabelas
+//   - Autenticação via Supabase Auth (sem senha armazenada aqui)
+//   - Storage via Supabase Storage (sem Cloudflare R2)
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider  = "postgresql"
+  url       = env("DATABASE_URL")
+}
+
+// ─── ENUMS ────────────────────────────────────────────────────────────────────
+
+enum PostStatus {
+  DRAFT
+  REVIEW
+  SCHEDULED
+  PUBLISHED
+  ARCHIVED
+}
+
+enum UserRole {
+  ADMIN
+  EDITOR
+  JOURNALIST
+  COLUMNIST
+  ADVERTISER
+}
+
+enum MediaType {
+  IMAGE
+  VIDEO
+  DOCUMENT
+  AUDIO
+}
+
+enum AdLocation {
+  HOME_TOP
+  HOME_SIDEBAR
+  CATEGORY_SIDEBAR
+  POST_TOP
+  POST_BOTTOM
+  FOOTER
+}
+
+// ─── USERS ────────────────────────────────────────────────────────────────────
+// Perfil interno. A senha e o login são gerenciados pelo Supabase Auth.
+// supabaseId referencia auth.users(id) do Supabase.
+
+model User {
+  id          String    @id @default(uuid())
+  supabaseId  String    @unique @map("supabase_id") // FK → Supabase auth.users
+  name        String
+  email       String    @unique
+  role        UserRole  @default(JOURNALIST)
+  avatar      String?   // URL do Supabase Storage
+  active      Boolean   @default(true)
+  lastLogin   DateTime? @map("last_login")
+  createdAt   DateTime  @default(now()) @map("created_at")
+  updatedAt   DateTime  @updatedAt @map("updated_at")
+
+  // Relations
+  postsCreated    Post[] @relation("PostCreatedBy")
+  postsUpdated    Post[] @relation("PostUpdatedBy")
+  mediaUploaded   Media[]
+
+  @@index([email])
+  @@index([role])
+  @@map("users")
+}
+
+// ─── AUTHORS ──────────────────────────────────────────────────────────────────
+// Perfil editorial público dos jornalistas/colunistas.
+// Separado de User para permitir autores externos sem login.
+
+model Author {
+  id        String   @id @default(uuid())
+  name      String
+  slug      String   @unique
+  bio       String?
+  photo     String?  // URL do Supabase Storage
+  email     String?  @unique
+  phone     String?
+  linkedin  String?
+  instagram String?
+  website   String?
+  position  String?  // Ex: "Repórter", "Colunista"
+  active    Boolean  @default(true)
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  // Relations
+  posts Post[]
+
+  @@index([slug])
+  @@index([email])
+  @@map("authors")
+}
+
+// ─── CATEGORIES ───────────────────────────────────────────────────────────────
+
+model Category {
+  id          String   @id @default(uuid())
+  name        String
+  slug        String   @unique
+  description String?
+  color       String?  // Ex: "#E63946"
+  icon        String?  // Nome do ícone (Lucide / custom)
+  order       Int      @default(0)
+  active      Boolean  @default(true)
+  createdAt   DateTime @default(now()) @map("created_at")
+  updatedAt   DateTime @updatedAt @map("updated_at")
+
+  // Relations
+  posts Post[]
+
+  @@index([slug])
+  @@index([order])
+  @@map("categories")
+}
+
+// ─── TAGS ─────────────────────────────────────────────────────────────────────
+
+model Tag {
+  id        String    @id @default(uuid())
+  name      String
+  slug      String    @unique
+  createdAt DateTime  @default(now()) @map("created_at")
+  updatedAt DateTime  @updatedAt @map("updated_at")
+
+  // Relations
+  posts PostTag[]
+
+  @@index([slug])
+  @@map("tags")
+}
+
+// ─── POSTS ────────────────────────────────────────────────────────────────────
+// Tabela principal. content é JSON (Tiptap). Nunca armazenar HTML puro.
+
+model Post {
+  id            String     @id @default(uuid())
+  title         String
+  subtitle      String?
+  slug          String     @unique
+  excerpt       String?
+  content       Json       // JSON (Tiptap ProseMirror document)
+  status        PostStatus @default(DRAFT)
+  publishedAt   DateTime?  @map("published_at")
+  scheduledAt   DateTime?  @map("scheduled_at")
+  readingTime   Int?       @map("reading_time") // Em minutos
+  views         Int        @default(0)          // Desnormalizado para leitura rápida
+  featured      Boolean    @default(false)      // Destacado na home
+  hero          Boolean    @default(false)       // Manchete principal
+  breaking      Boolean    @default(false)       // Breaking news
+  allowComments Boolean    @default(true) @map("allow_comments")
+  createdAt     DateTime   @default(now()) @map("created_at")
+  updatedAt     DateTime   @updatedAt @map("updated_at")
+
+  // FK — Author
+  authorId    String   @map("author_id")
+  author      Author   @relation(fields: [authorId], references: [id])
+
+  // FK — Category
+  categoryId  String   @map("category_id")
+  category    Category @relation(fields: [categoryId], references: [id])
+
+  // FK — Featured Image (Media)
+  featuredImageId String? @map("featured_image_id")
+  featuredImage   Media?  @relation(fields: [featuredImageId], references: [id])
+
+  // FK — User audit
+  createdById String? @map("created_by")
+  createdBy   User?   @relation("PostCreatedBy", fields: [createdById], references: [id])
+  updatedById String? @map("updated_by")
+  updatedBy   User?   @relation("PostUpdatedBy", fields: [updatedById], references: [id])
+
+  // Relations
+  tags      PostTag[]
+  seo       PostSeo?
+  postViews PostView[]
+  comments  Comment[]
+
+  @@index([slug])
+  @@index([status])
+  @@index([publishedAt])
+  @@index([categoryId])
+  @@index([authorId])
+  @@index([featured])
+  @@index([hero])
+  @@index([breaking])
+  @@index([createdAt])
+  @@map("posts")
+}
+
+// ─── POST_TAGS ────────────────────────────────────────────────────────────────
+
+model PostTag {
+  postId String @map("post_id")
+  tagId  String @map("tag_id")
+
+  post Post @relation(fields: [postId], references: [id], onDelete: Cascade)
+  tag  Tag  @relation(fields: [tagId], references: [id], onDelete: Cascade)
+
+  @@id([postId, tagId])
+  @@map("post_tags")
+}
+
+// ─── POST SEO ─────────────────────────────────────────────────────────────────
+
+model PostSeo {
+  id             String  @id @default(uuid())
+  seoTitle       String? @map("seo_title")
+  seoDescription String? @map("seo_description")
+  seoKeywords    String? @map("seo_keywords")
+  canonicalUrl   String? @map("canonical_url")
+  ogImage        String? @map("og_image") // URL da imagem OG
+  robots         String? @default("index, follow")
+  schemaType     String? @default("NewsArticle") @map("schema_type")
+
+  postId String @unique @map("post_id")
+  post   Post   @relation(fields: [postId], references: [id], onDelete: Cascade)
+
+  @@map("post_seo")
+}
+
+// ─── MEDIA ────────────────────────────────────────────────────────────────────
+// Apenas referências. Arquivos físicos ficam no Supabase Storage.
+
+model Media {
+  id            String    @id @default(uuid())
+  filename      String    // Nome gerado no storage
+  originalName  String    @map("original_name")
+  bucket        String    // Nome do bucket no Supabase Storage
+  path          String    // Caminho dentro do bucket
+  url           String    // URL pública gerada pelo Supabase
+  mime          String    // Ex: "image/jpeg"
+  extension     String    // Ex: "jpg"
+  width         Int?      // Para imagens
+  height        Int?      // Para imagens
+  size          Int       // Em bytes
+  alt           String?
+  caption       String?
+  dominantColor String?   @map("dominant_color") // Ex: "#3A86FF"
+  type          MediaType @default(IMAGE)
+  createdAt     DateTime  @default(now()) @map("created_at")
+  updatedAt     DateTime  @updatedAt @map("updated_at")
+
+  // FK — Upload author
+  uploadedById String? @map("uploaded_by")
+  uploadedBy   User?   @relation(fields: [uploadedById], references: [id])
+
+  // Relations
+  posts Post[]
+
+  @@index([type])
+  @@index([createdAt])
+  @@map("media")
+}
+
+// ─── ADS ──────────────────────────────────────────────────────────────────────
+
+model Ad {
+  id          String     @id @default(uuid())
+  name        String
+  description String?
+  location    AdLocation
+  script      String     @db.Text // Aceita qualquer JS de anunciante
+  width       Int?
+  height      Int?
+  active      Boolean    @default(true)
+  startDate   DateTime?  @map("start_date")
+  endDate     DateTime?  @map("end_date")
+  priority    Int        @default(0)
+  createdAt   DateTime   @default(now()) @map("created_at")
+  updatedAt   DateTime   @updatedAt @map("updated_at")
+
+  @@index([location])
+  @@index([active])
+  @@map("ads")
+}
+
+// ─── SPECIAL PROJECTS ─────────────────────────────────────────────────────────
+
+model SpecialProject {
+  id          String   @id @default(uuid())
+  title       String
+  slug        String   @unique
+  description String?
+  coverImage  String?  @map("cover_image") // URL Supabase Storage
+  sponsor     String?
+  content     Json?    // JSON (Tiptap)
+  featured    Boolean  @default(false)
+  active      Boolean  @default(true)
+  createdAt   DateTime @default(now()) @map("created_at")
+  updatedAt   DateTime @updatedAt @map("updated_at")
+
+  @@index([slug])
+  @@index([featured])
+  @@map("special_projects")
+}
+
+// ─── VIDEOS ───────────────────────────────────────────────────────────────────
+
+model Video {
+  id          String    @id @default(uuid())
+  title       String
+  slug        String    @unique
+  youtubeId   String    @map("youtube_id")
+  thumbnail   String?   // URL gerada do YouTube ou Supabase Storage
+  duration    Int?      // Em segundos
+  description String?
+  publishedAt DateTime? @map("published_at")
+  featured    Boolean   @default(false)
+  createdAt   DateTime  @default(now()) @map("created_at")
+  updatedAt   DateTime  @updatedAt @map("updated_at")
+
+  @@index([slug])
+  @@index([featured])
+  @@map("videos")
+}
+
+// ─── PODCASTS ─────────────────────────────────────────────────────────────────
+
+model Podcast {
+  id          String    @id @default(uuid())
+  title       String
+  slug        String    @unique
+  spotifyId   String    @map("spotify_id")
+  cover       String?   // URL Supabase Storage
+  description String?
+  duration    Int?      // Em segundos
+  publishedAt DateTime? @map("published_at")
+  createdAt   DateTime  @default(now()) @map("created_at")
+  updatedAt   DateTime  @updatedAt @map("updated_at")
+
+  @@index([slug])
+  @@map("podcasts")
+}
+
+// ─── NEWSLETTER SUBSCRIBERS ───────────────────────────────────────────────────
+
+model NewsletterSubscriber {
+  id        String   @id @default(uuid())
+  name      String?
+  email     String   @unique
+  confirmed Boolean  @default(false)
+  token     String?  @unique // Token de confirmação
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  @@index([email])
+  @@index([confirmed])
+  @@map("newsletter_subscribers")
+}
+
+// ─── CONTACT MESSAGES ─────────────────────────────────────────────────────────
+
+model ContactMessage {
+  id        String   @id @default(uuid())
+  name      String
+  email     String
+  phone     String?
+  subject   String?
+  message   String   @db.Text
+  status    String   @default("unread") // "unread" | "read" | "replied"
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  @@index([email])
+  @@index([status])
+  @@index([createdAt])
+  @@map("contact_messages")
+}
+
+// ─── POST VIEWS ───────────────────────────────────────────────────────────────
+// Nunca armazenar IP puro. Sempre usar hash.
+
+model PostView {
+  id        String   @id @default(uuid())
+  postId    String   @map("post_id")
+  ipHash    String   @map("ip_hash")   // Hash do IP (nunca IP puro)
+  sessionId String?  @map("session_id")
+  userAgent String?  @map("user_agent")
+  createdAt DateTime @default(now()) @map("created_at")
+
+  post Post @relation(fields: [postId], references: [id], onDelete: Cascade)
+
+  @@index([postId])
+  @@index([createdAt])
+  @@map("post_views")
+}
+
+// ─── COMMENTS ─────────────────────────────────────────────────────────────────
+// Estrutura preparada. allowComments no Post controla se aparecem.
+
+model Comment {
+  id        String   @id @default(uuid())
+  postId    String   @map("post_id")
+  author    String
+  email     String
+  message   String   @db.Text
+  approved  Boolean  @default(false)
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  post Post @relation(fields: [postId], references: [id], onDelete: Cascade)
+
+  @@index([postId])
+  @@index([approved])
+  @@map("comments")
+}
+
+// ─── REDIRECTS ────────────────────────────────────────────────────────────────
+// Para migração de URLs do WordPress.
+
+model Redirect {
+  id        String   @id @default(uuid())
+  oldSlug   String   @unique @map("old_slug")
+  newSlug   String   @map("new_slug")
+  createdAt DateTime @default(now()) @map("created_at")
+
+  @@index([oldSlug])
+  @@map("redirects")
+}
+
+// ─── SETTINGS ─────────────────────────────────────────────────────────────────
+// Configurações globais do portal. Linha única (singleton).
+
+model Setting {
+  id                   String   @id @default(uuid())
+  siteName             String   @default("Negócio & Franquia") @map("site_name")
+  siteDescription      String?  @map("site_description")
+  siteUrl              String   @default("https://negocioefranquia.com.br") @map("site_url")
+  logo                 String?  // URL Supabase Storage
+  favicon              String?  // URL Supabase Storage
+  defaultOgImage       String?  @map("default_og_image")
+  defaultSeoTitle      String?  @map("default_seo_title")
+  defaultSeoDescription String? @map("default_seo_description")
+  googleAnalytics      String?  @map("google_analytics")
+  googleTagManager     String?  @map("google_tag_manager")
+  facebookPixel        String?  @map("facebook_pixel")
+  linkedinPixel        String?  @map("linkedin_pixel")
+  createdAt            DateTime @default(now()) @map("created_at")
+  updatedAt            DateTime @updatedAt @map("updated_at")
+
+  @@map("settings")
+}
